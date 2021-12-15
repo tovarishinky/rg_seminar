@@ -19,6 +19,18 @@ export class Camera extends Node {
         this.falling = false;
         this.waitForJump = false;
         this.sprint = false;
+        this.player = null;
+        this.feet = null;
+        this.autoJump = false;
+    }
+
+    setFeet(ft) {
+        this.feet = ft;
+        console.log(this.feet);
+    }
+
+    getPlayer() {
+        this.player = this.children[0];
     }
 
     updateProjection() {
@@ -69,6 +81,12 @@ export class Camera extends Node {
         if (this.falling) {
             vec3.add(acc, acc, down);
         }
+        console.log(this.autoJump);
+        if (this.autoJump) {
+            //this.waitForJump = true;
+            vec3.set(c.velocity, c.velocity[0], up[1] * 0.2, c.velocity[2]);
+            this.autoJump = false;
+        }
         
 
 
@@ -94,7 +112,13 @@ export class Camera extends Node {
         if (len > c.maxSpeed) {
             vec3.mul(c.velocity, c.velocity, vec3.set(vec3.create(), c.maxSpeed / len, 1, c.maxSpeed / len));
         }
-        //console.log(c.velocity[1]);        
+        this.updateFeet();        
+    }
+
+    updateFeet() {
+        this.feet.velocity = vec3.clone(this.velocity);
+        vec3.set(this.feet.rotation, 0, this.rotation[1], 0);
+        //this.feet.rotation = vec3.clone(this.rotation);
     }
 
     enable() {
@@ -120,11 +144,11 @@ export class Camera extends Node {
 
         c.rotation[0] -= dy * c.mouseSensitivity;
         c.rotation[1] -= dx * c.mouseSensitivity;
+        c.player.rotation[0] += dy * c.mouseSensitivity;
 
         const pi = Math.PI;
         const twopi = pi * 2;
         const halfpi = pi / 2;
-
         if (c.rotation[0] > halfpi) {
             c.rotation[0] = halfpi;
         }

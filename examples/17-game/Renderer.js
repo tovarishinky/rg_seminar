@@ -23,7 +23,7 @@ export class Renderer {
     }
 
     prepare(scene) {
-        scene.nodes.forEach(node => {
+        scene.traverse(node => {
             node.gl = {};
             if (node.mesh) {
                 Object.assign(node.gl, this.createModel(node.mesh));

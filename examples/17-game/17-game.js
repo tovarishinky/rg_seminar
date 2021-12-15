@@ -7,6 +7,7 @@ import { Physics } from './Physics.js';
 import { Camera } from './Camera.js';
 import { SceneLoader } from './SceneLoader.js';
 import { SceneBuilder } from './SceneBuilder.js';
+import { Feet } from './Feet.js';
 
 
 class App extends Application {
@@ -36,8 +37,15 @@ class App extends Application {
         this.scene.traverse(node => {
             if (node instanceof Camera) {
                 this.camera = node;
+            } else {
+                if (node instanceof Feet) {
+                    this.camera.feet = node;
+                    console.log('found feet');
+                }
             }
         });
+        // Find player
+        this.camera.getPlayer();
 
         this.camera.aspect = this.aspect;
         this.camera.updateProjection();

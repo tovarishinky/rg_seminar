@@ -23,6 +23,7 @@ export class Node {
         mat4.fromRotationTranslationScale(t, q, v, s);
     }
 
+
     getGlobalTransform() {
         if (!this.parent) {
             return mat4.clone(this.transform);
