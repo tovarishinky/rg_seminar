@@ -7,6 +7,7 @@ import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { Player } from './Player.js';
 import { Renderer } from './Renderer.js';
 import { GUI } from '../../lib/dat.gui.module.js';
+import { Physics } from './Physics.js';
 
 
 class App extends Application {
@@ -20,8 +21,9 @@ class App extends Application {
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({node: this.player});
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(2, 2, 2);
+        this.player.translation = vec3.fromValues(4, 0, 4);
         
+        this.physics = new Physics(this.scene);
 
         this.renderer = new Renderer(this.gl);
         this.renderer.prepareScene(this.scene);
@@ -44,6 +46,10 @@ class App extends Application {
 
         if(this.player) {
             this.player.update(dt);
+        }
+
+        if (this.physics && this.player) {
+            this.physics.update(dt, this.player);
         }
     }
 

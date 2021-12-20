@@ -21,6 +21,8 @@ export class Player extends Node {
         this.maxSpeed = 3;
         this.friction = 0.2;
         this.acceleration = 20;
+        this.collisionMin = [-0.4, -1, -0.4]; // collisionbox
+        this.collisionMax = [0.4, 0.2, 0.4]; // collisionbox
     }
 
     setFeet(ft) {
@@ -115,8 +117,8 @@ export class Player extends Node {
 
 
         // TODO update this in physics
-        this.updateMatrix();
-        vec3.scaleAndAdd(c.translation, c.translation, c.velocity, dt);
+        //this.updateMatrix();
+        //vec3.scaleAndAdd(c.translation, c.translation, c.velocity, dt);
     }
 
     updateFeet() {

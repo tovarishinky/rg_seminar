@@ -66,4 +66,13 @@ export class Node {
         });
     }
 
+    getGlobalTransform() {
+        if (!this.parent) {
+            return mat4.clone(this.matrix);
+        } else {
+            let matrix = this.parent.getGlobalTransform();
+            return mat4.mul(matrix, matrix, this.matrix);
+        }
+    }
+
 }
