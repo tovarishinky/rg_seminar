@@ -13,8 +13,9 @@ import { Physics } from './Physics.js';
 class App extends Application {
 
     async start() {
+        this.gameSpeed = 1 * 0.001;
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/testmap/testmap.gltf');
+        await this.loader.load('../../common/models/map_base_test/map_base_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -23,7 +24,7 @@ class App extends Application {
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({node: this.player});
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(4, 10, 4);
+        this.player.translation = vec3.fromValues(0, 50, 15);
         
         this.physics = new Physics(this.collisionScene);
 
@@ -43,7 +44,7 @@ class App extends Application {
 
     update() {
         const t = this.time = Date.now();
-        const dt = (this.time - this.startTime) * 0.001;
+        const dt = (this.time - this.startTime) * this.gameSpeed;
         this.startTime = this.time;
 
         if(this.player) {
