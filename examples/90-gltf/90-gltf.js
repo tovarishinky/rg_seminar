@@ -21,7 +21,7 @@ class App extends Application {
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({node: this.player});
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(4, 0, 4);
+        this.player.translation = vec3.fromValues(4, 10, 4);
         
         this.physics = new Physics(this.scene);
 

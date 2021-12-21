@@ -5,6 +5,8 @@ export class Player extends Node {
     constructor(options = {}) {
         super(options);
 
+        this.dims = {width: 0.6, height: 3, length: 0.6};
+
         this.rotation = vec3.fromValues(0,0,0); // Euler rotation  instead quat
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
         this.keydownHandler = this.keydownHandler.bind(this);
@@ -14,15 +16,25 @@ export class Player extends Node {
         this.waitForJump = false;
         this.sprint = false;
         this.player = null;
-        this.feet = null;
+        
         this.autoJump = false;
         this.velocity = [0, 0, 0];
         this.mouseSensitivity = 0.002;
         this.maxSpeed = 3;
         this.friction = 0.2;
         this.acceleration = 20;
-        this.collisionMin = [-0.4, -1, -0.4]; // collisionbox
-        this.collisionMax = [0.4, 0.2, 0.4]; // collisionbox
+        this.collisionMin = [-this.dims.width/2, -this.dims.height, -this.dims.length/2]; // collisionbox
+        this.collisionMax = [this.dims.width/2, 0.2, this.dims.length/2]; // collisionbox
+        this.feet = {
+            min: [
+                this.collisionMin[0] + 0.1, 
+                this.collisionMin[1] - 0.1, 
+                this.collisionMin[2] + 0.1],
+            max: [
+                this.collisionMax[0] - 0.1, 
+                this.collisionMax[1] + 0.1, 
+                this.collisionMax[2] - 0.1]
+        };
     }
 
     setFeet(ft) {

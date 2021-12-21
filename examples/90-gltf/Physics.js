@@ -4,27 +4,24 @@ export class Physics {
 
     constructor(scene) {
         this.scene = scene;
+        this.falling = false;
     }
 
     update(dt, player) {
+        this.falling = true; // set falling, set to false in collision detection if necessary
+        console.log(this.scene);
         this.scene.traverse(node => {
-            if (node.mesh && player.velocity) {
-                //console.log("MAX: ", node.mesh.primitives[0].attributes.POSITION.max, 
-                //"\nMIN: ", node.mesh.primitives[0].attributes.POSITION.min);
+            if (node.mesh && player.velocity && player.feet) {
                 vec3.scaleAndAdd(player.translation, player.translation, player.velocity, dt);
                 player.updateMatrix();
                 this.resolveCollision(player, node);
             }
-            // if (node.velocity) {     
-            //     vec3.scaleAndAdd(node.translation, node.translation, node.velocity, dt);
-            //     node.updateTransform();
-            //     this.scene.traverse(other => {
-            //         if (node !== other) {
-            //             this.resolveCollision(node, other);
-            //         }
-            //     });
-            // }
         });
+        this.updateFalling(player);
+    }
+
+    updateFalling(player) {
+        player.falling = this.falling;
     }
 
     intervalIntersection(min1, max1, min2, max2) {
@@ -47,8 +44,19 @@ export class Physics {
         
         const mina = vec3.add(vec3.create(), posa, a.collisionMin);
         const maxa = vec3.add(vec3.create(), posa, a.collisionMax);
-        const minb = vec3.add(vec3.create(), posb, b.mesh.primitives[0].attributes.POSITION.min);
-        const maxb = vec3.add(vec3.create(), posb, b.mesh.primitives[0].attributes.POSITION.max);
+
+        console.log(b.mesh.primitives[0].attributes.POSITION.min);
+
+        const mb = vec3.mul(vec3.create(), b.mesh.primitives[0].attributes.POSITION.min, b.scale);
+        const mbb = vec3.mul(vec3.create(), b.mesh.primitives[0].attributes.POSITION.max, b.scale);
+
+        console.log(mb);
+
+        const minb = vec3.add(vec3.create(), posb, mb);
+        const maxb = vec3.add(vec3.create(), posb, mbb);
+        // feet
+        const minaf = vec3.add(vec3.create(), posa, a.feet.min);
+        const maxaf = vec3.add(vec3.create(), posa, a.feet.max);
 
         // Check if there is collision.
         const isColliding = this.aabbIntersection({
@@ -58,6 +66,20 @@ export class Physics {
             min: minb,
             max: maxb
         });
+
+        // check for ground contact
+        const isCollidingFeet = this.aabbIntersection({
+            min: minaf,
+            max: maxaf
+        }, {
+            min: minb,
+            max: maxb
+        });
+
+        // set falling
+        if (isCollidingFeet) {
+            this.falling = false;
+        }
 
         if (!isColliding) {
             return;
