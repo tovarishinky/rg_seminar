@@ -308,6 +308,7 @@ export class GLTFLoader {
         if (gltfSpec.nodes) {
             for (const nodeIndex of gltfSpec.nodes) {
                 const node = await this.loadNode(nodeIndex);
+                console.log(node);
                 options.nodes.push(node);
             }
         }

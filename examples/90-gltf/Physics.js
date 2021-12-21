@@ -9,7 +9,6 @@ export class Physics {
 
     update(dt, player) {
         this.falling = true; // set falling, set to false in collision detection if necessary
-        console.log(this.scene);
         this.scene.traverse(node => {
             if (node.mesh && player.velocity && player.feet) {
                 vec3.scaleAndAdd(player.translation, player.translation, player.velocity, dt);
@@ -45,12 +44,8 @@ export class Physics {
         const mina = vec3.add(vec3.create(), posa, a.collisionMin);
         const maxa = vec3.add(vec3.create(), posa, a.collisionMax);
 
-        console.log(b.mesh.primitives[0].attributes.POSITION.min);
-
         const mb = vec3.mul(vec3.create(), b.mesh.primitives[0].attributes.POSITION.min, b.scale);
         const mbb = vec3.mul(vec3.create(), b.mesh.primitives[0].attributes.POSITION.max, b.scale);
-
-        console.log(mb);
 
         const minb = vec3.add(vec3.create(), posb, mb);
         const maxb = vec3.add(vec3.create(), posb, mbb);
@@ -84,7 +79,6 @@ export class Physics {
         if (!isColliding) {
             return;
         }
-        console.log('collision!');
 
         // Move node A minimally to avoid collision.
         const diffa = vec3.sub(vec3.create(), maxb, mina);
