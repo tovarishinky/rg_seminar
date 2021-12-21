@@ -4,9 +4,6 @@ export class Scene {
 
     constructor(options = {}) {
         this.nodes = [...(options.nodes || [])];
-        // this.allNodes = [...(options.nodes || [])];
-        // this.nodes = this.allNodes where node.type != 'aabb'
-        // this.aabbNodes = this.allNodes where node.type == 'aabb'
     }
 
     addNode(node) {

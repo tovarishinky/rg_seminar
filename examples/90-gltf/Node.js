@@ -3,6 +3,9 @@ import { vec3, mat4, quat } from '../../lib/gl-matrix-module.js';
 export class Node {
 
     constructor(options = {}) {
+        this.name = options.name 
+            ? options.name
+            : 'unnamed';
         this.translation = options.translation
             ? vec3.clone(options.translation)
             : vec3.fromValues(0, 0, 0);

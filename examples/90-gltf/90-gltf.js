@@ -16,14 +16,16 @@ class App extends Application {
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/testmap/testmap.gltf');
 
-        this.scene = await this.loader.loadScene(this.loader.defaultScene);
+        const scenes = await this.loader.loadScene(this.loader.defaultScene);
+        this.scene = await scenes[0];
+        this.collisionScene = await scenes[1];
 
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({node: this.player});
         this.player.updateMatrix();
         this.player.translation = vec3.fromValues(4, 10, 4);
         
-        this.physics = new Physics(this.scene);
+        this.physics = new Physics(this.collisionScene);
 
         this.renderer = new Renderer(this.gl);
         this.renderer.prepareScene(this.scene);
@@ -34,7 +36,7 @@ class App extends Application {
     }
 
     render() {
-        if (this.renderer) {
+        if (this.renderer && this.player) {
             this.renderer.render(this.scene, this.player);
         }
     }

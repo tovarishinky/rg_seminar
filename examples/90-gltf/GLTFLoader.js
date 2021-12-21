@@ -276,6 +276,7 @@ export class GLTFLoader {
     async loadNode(nameOrIndex) {
         const gltfSpec = this.findByNameOrIndex(this.gltf.nodes, nameOrIndex);
         if (this.cache.has(gltfSpec)) {
+            console.log("Check this!!!");
             return this.cache.get(gltfSpec);
         }
 
@@ -305,17 +306,23 @@ export class GLTFLoader {
         }
 
         let options = { nodes: [] };
+        let collisionOptions = { nodes: [] };
         if (gltfSpec.nodes) {
             for (const nodeIndex of gltfSpec.nodes) {
                 const node = await this.loadNode(nodeIndex);
-                console.log(node);
-                options.nodes.push(node);
+                // If node.name is 'aabb...' then put it in Collision Scene, otherwise put it in Render Scene
+                if (node.name.startsWith('aabb')) {                             
+                    collisionOptions.nodes.push(node);
+                } else {
+                    options.nodes.push(node);
+                }
             }
         }
 
+        const collisionScene = new Scene(collisionOptions);
         const scene = new Scene(options);
         this.cache.set(gltfSpec, scene);
-        return scene;
+        return [scene, collisionScene];
     }
 
 }
