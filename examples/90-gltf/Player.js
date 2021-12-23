@@ -5,7 +5,14 @@ export class Player extends Node {
     constructor(options = {}) {
         super(options);
 
-        this.dims = {width: 0.6, height: 3, length: 0.6};
+        this.dims = {width: 0.6, height: 3, length: 0.6}; // set collision box for player
+        this.gravity = -1.5;    // set gravity
+        this.jumpHeight = 1;    // set Jump
+        this.walkSpeed = 1;      // set max walking speed
+        this.sprintSpeed = 2;   // set max sprinting speed
+        this.mvAcc = 1;         // set move acceleration TODO not implemeted yet
+        this.acceleration = 1; // set acceleration
+        this.maxSpeed = this.walkSpeed;
 
         this.rotation = vec3.fromValues(0,0,0); // Euler rotation  instead quat
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
@@ -20,9 +27,7 @@ export class Player extends Node {
         this.autoJump = false;
         this.velocity = [0, 0, 0];
         this.mouseSensitivity = 0.002;
-        this.maxSpeed = 3;
         this.friction = 0.2;
-        this.acceleration = 20;
         this.collisionMin = [-this.dims.width/2, -this.dims.height, -this.dims.length/2]; // collisionbox
         this.collisionMax = [this.dims.width/2, 0.2, this.dims.length/2]; // collisionbox
         this.feet = {
@@ -35,6 +40,12 @@ export class Player extends Node {
                 this.collisionMax[1] + 0.1, 
                 this.collisionMax[2] - 0.1]
         };
+
+        setInterval(() => {console.log(
+            'x: ', Math.round(this.translation[0]).toString(), 
+            '\ny: ', Math.round(this.translation[1]).toString(), 
+            '\nz: ', Math.round(this.translation[2]).toString(),
+            '\nspeed: ', this.velocity)}, 500); // TODO remove - debug
     }
 
     setFeet(ft) {
@@ -59,8 +70,8 @@ export class Player extends Node {
             -Math.sin(c.rotation[1]), 0, -Math.cos(c.rotation[1]));
         const right = vec3.set(vec3.create(),
             Math.cos(c.rotation[1]), 0, -Math.sin(c.rotation[1]));
-        const up = vec3.set(vec3.create(), 0, 13, 0);  // set jump height
-        const down = vec3.set(vec3.create(), 0, -1.5, 0);
+        const up = vec3.set(vec3.create(), 0, c.jumpHeight, 0);  // set jump height
+        const down = vec3.set(vec3.create(), 0, c.gravity, 0);
 
         // 1: add movement acceleration
         let acc = vec3.create();
@@ -78,11 +89,11 @@ export class Player extends Node {
         }
         if (this.keys['ShiftLeft']) {
             this.sprint = true;
-            c.maxSpeed = 6;
+            c.maxSpeed = c.sprintSpeed;
         }
         if (!this.keys['ShiftLeft']) {
             this.sprint = false;
-            c.maxSpeed = 3;
+            c.maxSpeed = c.walkSpeed;
         }
 
         // verti move
@@ -116,8 +127,9 @@ export class Player extends Node {
         {   
             vec3.scale(c.velocity, c.velocity, 1 - c.friction);
         }
+        console.log(this.falling);
         if (!this.falling) {
-            vec3.set(c.velocity, c.velocity[0], Math.max(c.velocity[1], -2), c.velocity[2]);
+            vec3.set(c.velocity, c.velocity[0], Math.max(c.velocity[1], -1), c.velocity[2]);
         }
 
         // 4: limit horizontal speed
@@ -125,18 +137,6 @@ export class Player extends Node {
         if (len > c.maxSpeed) {
             vec3.mul(c.velocity, c.velocity, vec3.set(vec3.create(), c.maxSpeed / len, 1, c.maxSpeed / len));
         }
-        //this.updateFeet();
-
-
-        // TODO update this in physics
-        //this.updateMatrix();
-        //vec3.scaleAndAdd(c.translation, c.translation, c.velocity, dt);
-    }
-
-    updateFeet() {
-        this.feet.velocity = vec3.clone(this.velocity);
-        vec3.set(this.feet.rotation, 0, this.rotation[1], 0);
-        //this.feet.rotation = vec3.clone(this.rotation);
     }
 
     enableCam() {

@@ -13,7 +13,7 @@ import { Physics } from './Physics.js';
 class App extends Application {
 
     async start() {
-        this.gameSpeed = 1 * 0.001;
+        this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/map_base_test/map_base_test.gltf');
 
@@ -24,7 +24,7 @@ class App extends Application {
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({node: this.player});
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(0, 50, 15);
+        this.player.translation = vec3.fromValues(0, 50, 0);
         
         this.physics = new Physics(this.collisionScene);
 
