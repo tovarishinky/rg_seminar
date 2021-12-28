@@ -8,6 +8,7 @@ import { Camera } from './Camera.js';
 import { SceneLoader } from './SceneLoader.js';
 import { SceneBuilder } from './SceneBuilder.js';
 import { Feet } from './Feet.js';
+import {Light} from "../17-game/Light.js";
 
 
 class App extends Application {
@@ -31,6 +32,8 @@ class App extends Application {
         const builder = new SceneBuilder(scene);
         this.scene = builder.build();
         this.physics = new Physics(this.scene);
+        this.light = new Light();
+        this.scene.addNode(this.light)
 
         // Find first camera.
         this.camera = null;
@@ -84,7 +87,7 @@ class App extends Application {
 
     render() {
         if (this.scene) {
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.camera, this.light);
         }
     }
 
@@ -105,4 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new App(canvas);
     const gui = new GUI();
     gui.add(app, 'enableCamera');
+    setTimeout(() => {gui.add(app.light, 'ambient', 0.0, 1.0);
+        gui.add(app.light, 'diffuse', 0.0, 1.0);
+        gui.add(app.light, 'specular', 0.0, 1.0);
+        gui.add(app.light, 'shininess', 0.0, 1000.0);
+        gui.addColor(app.light, 'color');
+        for (let i = 0; i < 3; i++) {
+            gui.add(app.light.position, i, -10.0, 10.0).name('position.' + String.fromCharCode('x'.charCodeAt(0) + i));
+        }}, 1000);
 });
