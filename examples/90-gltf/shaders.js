@@ -23,7 +23,7 @@ void main() {
     float d = distance(vertexPosition, lightPosition);
     float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
     
-        vec3 N = (uViewMatrix * vec4(aNormal, 0)).xyz;
+    vec3 N = normalize(uViewMatrix * vec4(aNormal, 0)).xyz;
     vec3 L = normalize(lightPosition - vertexPosition);
     vec3 E = normalize(-vertexPosition);
     vec3 R = normalize(reflect(-L, N));

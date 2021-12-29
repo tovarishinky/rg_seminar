@@ -11,7 +11,7 @@ export class Light extends Node {
             '\nspeed: ', this.velocity)}, 500); // TODO remove - debug
         Object.assign(this, {
             ambient          : 0.2,
-            diffuse          : 0.8,
+            diffuse          : 6,
             specular         : 1,
             shininess        : 10,
             color            : [255, 255, 255],
