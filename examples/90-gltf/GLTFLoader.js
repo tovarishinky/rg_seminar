@@ -10,6 +10,7 @@ import { OrthographicCamera } from './OrthographicCamera.js';
 import { Node } from './Node.js';
 import { Scene } from './Scene.js';
 import { vec3 } from '../../lib/gl-matrix-module.js';
+import {Light} from "../90-gltf/Light.js";
 
 // This class loads all GLTF resources and instantiates
 // the corresponding classes. Keep in mind that it loads
@@ -279,7 +280,6 @@ export class GLTFLoader {
             console.log("Check this!!!");
             return this.cache.get(gltfSpec);
         }
-
         let options = { ...gltfSpec, children: [] };
         if (gltfSpec.children) {
             for (const nodeIndex of gltfSpec.children) {
@@ -293,8 +293,13 @@ export class GLTFLoader {
         if (gltfSpec.mesh !== undefined) {
             options.mesh = await this.loadMesh(gltfSpec.mesh);
         }
-
-        const node = new Node(options);
+        let node;
+        if(gltfSpec.name.startsWith('Light')) {
+            node= new Light(options);
+        }
+        else {
+            node = new Node(options);
+        }
         this.cache.set(gltfSpec, node);
         return node;
     }

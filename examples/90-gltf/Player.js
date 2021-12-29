@@ -14,7 +14,6 @@ export class Player extends Node {
         this.acceleration = 5; // set acceleration
         this.maxSpeed = this.walkSpeed;
 
-        this.rotation = vec3.fromValues(0, 0, 0); // Euler rotation  instead quat
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
         this.keydownHandler = this.keydownHandler.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
