@@ -95,6 +95,7 @@ export class Renderer {
     }
 
     preparePrimitive(primitive) {
+        console.log(primitive);
         if (this.glObjects.has(primitive)) {
             return this.glObjects.get(primitive);
         }
@@ -115,6 +116,7 @@ export class Renderer {
         const attributeNameToIndexMap = {
             POSITION   : 0,
             TEXCOORD_0 : 1,
+            NORMAL : 2,
         };
 
         for (const name in primitive.attributes) {
