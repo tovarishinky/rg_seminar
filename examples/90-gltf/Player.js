@@ -13,7 +13,15 @@ export class Player extends Node {
         this.mvAcc = 1;         // set move acceleration TODO not implemeted yet
         this.acceleration = 5; // set acceleration
         this.maxSpeed = this.walkSpeed;
-
+        Object.assign(this, {
+            position         : [2, 5, 3],
+            ambient          : 0.2,
+            diffuse          : 0.8,
+            specular         : 1,
+            shininess        : 10,
+            color            : [255, 255, 255],
+            attenuatuion     : [1.0, 0, 0.02]
+        });
         this.rotation = vec3.fromValues(0,0,0); // Euler rotation  instead quat
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
         this.keydownHandler = this.keydownHandler.bind(this);

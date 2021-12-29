@@ -1,4 +1,5 @@
 import { Node } from './Node.js';
+import {Light} from "../90-gltf/Light.js";
 
 export class Scene {
 
@@ -33,5 +34,11 @@ export class Scene {
             ...this,
             nodes: this.nodes.map(node => node.clone()),
         });
+    }
+
+    getLights(){
+        const lights = [];
+        this.traverse(node => { if(node instanceof Light)lights.push(node)});
+        return lights;
     }
 }
