@@ -15,7 +15,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/map_base_test/map_base_test.gltf');
+        await this.loader.load('../../common/models/map_base_test_prescale/map_base_test_prescale.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -24,7 +24,7 @@ class App extends Application {
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({node: this.player});
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(0, 50, 0);
+        this.player.translation = vec3.fromValues(0, 5, 0);
         
         this.physics = new Physics(this.collisionScene);
 
@@ -34,6 +34,29 @@ class App extends Application {
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
+
+
+    }
+
+    updateCollisionParams() {
+        this.collisionScene.traverse(node => {
+            /*
+            let mb = node.mesh.primitives[0].attributes.POSITION.min;
+            let mbb = node.mesh.primitives[0].attributes.POSITION.max;
+            
+            vec3.transformMat4(mb, mb, b.matrix);
+            vec3.transformMat4(mbb, mbb, b.matrix);
+            
+            node.mesh.primitives[0].attributes.POSITION.min = mb;
+            node.mesh.primitives[0].attributes.POSITION.max = mbb;
+            */
+            let mb = b.mesh.primitives[0].attributes.POSITION.min;
+            let mbb = b.mesh.primitives[0].attributes.POSITION.max;
+            
+    
+            vec3.mul(mb, mb, b.scale);
+            vec3.mul(mbb, mbb, b.scale); 
+        });
     }
 
     render() {

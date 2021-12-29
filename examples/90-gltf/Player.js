@@ -5,13 +5,13 @@ export class Player extends Node {
     constructor(options = {}) {
         super(options);
 
-        this.dims = {width: 0.6, height: 3, length: 0.6}; // set collision box for player
-        this.gravity = -1.5;    // set gravity
-        this.jumpHeight = 1;    // set Jump
-        this.walkSpeed = 1;      // set max walking speed
-        this.sprintSpeed = 2;   // set max sprinting speed
+        this.dims = {width: 0.6, height: 2.5, length: 0.6}; // set collision box for player
+        this.gravity = -5;    // set gravity
+        this.jumpHeight = 12;    // set Jump
+        this.walkSpeed = 4;      // set max walking speed
+        this.sprintSpeed = 6;   // set max sprinting speed
         this.mvAcc = 1;         // set move acceleration TODO not implemeted yet
-        this.acceleration = 1; // set acceleration
+        this.acceleration = 5; // set acceleration
         this.maxSpeed = this.walkSpeed;
 
         this.rotation = vec3.fromValues(0,0,0); // Euler rotation  instead quat

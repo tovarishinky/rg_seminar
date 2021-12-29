@@ -9,10 +9,10 @@ export class Physics {
 
     update(dt, player) {
         this.falling = true; // set falling, set to false in collision detection if necessary
+        vec3.scaleAndAdd(player.translation, player.translation, player.velocity, dt);
+        player.updateMatrix();
         this.scene.traverse(node => {
             if (node.mesh && player.velocity && player.feet) {
-                vec3.scaleAndAdd(player.translation, player.translation, player.velocity, dt);
-                player.updateMatrix();
                 this.resolveCollision(player, node);
             }
         });
@@ -44,8 +44,8 @@ export class Physics {
         const mina = vec3.add(vec3.create(), posa, a.collisionMin);
         const maxa = vec3.add(vec3.create(), posa, a.collisionMax);
 
-        const mb = vec3.mul(vec3.create(), b.mesh.primitives[0].attributes.POSITION.min, b.scale);
-        const mbb = vec3.mul(vec3.create(), b.mesh.primitives[0].attributes.POSITION.max, b.scale);
+        let mb = vec3.clone(b.mesh.primitives[0].attributes.POSITION.min);
+        let mbb = vec3.clone(b.mesh.primitives[0].attributes.POSITION.max);
 
         const minb = vec3.add(vec3.create(), posb, mb);
         const maxb = vec3.add(vec3.create(), posb, mbb);
