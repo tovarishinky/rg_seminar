@@ -156,7 +156,8 @@
                 145,
                 146,
                 147,
-                148
+                148,
+                149
             ]
         }
     ],
@@ -1935,6 +1936,20 @@
                 -7.5,
                 2.5,
                 -58.5
+            ]
+        },
+        {
+            "mesh" : 149,
+            "name" : "Light",
+            "scale" : [
+                0.2579003572463989,
+                0.2579003572463989,
+                0.2579003572463989
+            ],
+            "translation" : [
+                0,
+                12.680829048156738,
+                -12.047481536865234
             ]
         }
     ],
@@ -4087,6 +4102,20 @@
                     },
                     "indices" : 366,
                     "material" : 6
+                }
+            ]
+        },
+        {
+            "name" : "Sphere",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 564,
+                        "NORMAL" : 565,
+                        "TEXCOORD_0" : 566
+                    },
+                    "indices" : 567,
+                    "material" : 0
                 }
             ]
         }
@@ -9002,6 +9031,40 @@
             "componentType" : 5126,
             "count" : 75,
             "type" : "VEC2"
+        },
+        {
+            "bufferView" : 564,
+            "componentType" : 5126,
+            "count" : 1984,
+            "max" : [
+                0.9999997019767761,
+                1,
+                0.9999994039535522
+            ],
+            "min" : [
+                -0.9999990463256836,
+                -1,
+                -0.9999987483024597
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 565,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 566,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 567,
+            "componentType" : 5123,
+            "count" : 2880,
+            "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
@@ -11824,6 +11887,26 @@
             "buffer" : 0,
             "byteLength" : 600,
             "byteOffset" : 8985820
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 8986420
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9010228
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 15872,
+            "byteOffset" : 9034036
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5760,
+            "byteOffset" : 9049908
         }
     ],
     "samplers" : [
@@ -11834,7 +11917,7 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 8986420,
+            "byteLength" : 9055668,
             "uri" : "map_base_test_prescale.bin"
         }
     ]
