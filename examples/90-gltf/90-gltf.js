@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gui = new GUI();
     gui.add(app, 'enableCamera');
     setTimeout(() => {gui.add(app.light, 'ambient', 0.0, 1.0);
-        gui.add(app.light, 'diffuse', 0.0, 1.0);
+        gui.add(app.light, 'diffuse', 0.0, 10.0);
         gui.add(app.light, 'specular', 0.0, 1.0);
         gui.add(app.light, 'shininess', 0.0, 1000.0);
         gui.addColor(app.light, 'color');
