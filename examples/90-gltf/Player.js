@@ -5,7 +5,7 @@ export class Player extends Node {
     constructor(options = {}) {
         super(options);
 
-        this.dims = { width: 0.6, height: 2.5, length: 0.6 }; // set collision box for player
+        this.dims = { width: 0.6, height: 1.8, length: 0.6 }; // set collision box for player
         this.gravity = -5; // set gravity
         this.jumpHeight = 12; // set Jump
         this.walkSpeed = 6; // set max walking speed
@@ -31,14 +31,14 @@ export class Player extends Node {
         this.collisionMax = [this.dims.width / 2, 0.2, this.dims.length / 2]; // collisionbox
         this.feet = {
             min: [
-                this.collisionMin[0] + 0.1,
+                this.collisionMin[0] + 0.2,
                 this.collisionMin[1] - 0.1,
-                this.collisionMin[2] + 0.1
+                this.collisionMin[2] + 0.2
             ],
             max: [
-                this.collisionMax[0] - 0.1,
+                this.collisionMax[0] - 0.2,
                 this.collisionMax[1] + 0.1,
-                this.collisionMax[2] - 0.1
+                this.collisionMax[2] - 0.2
             ]
         };
 
