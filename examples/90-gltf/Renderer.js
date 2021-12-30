@@ -199,13 +199,27 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uDiffuse, light.diffuse);
         gl.uniform1f(program.uniforms.uSpecular, light.specular);
         gl.uniform1f(program.uniforms.uShininess, light.shininess);
-        gl.uniform3fv(program.uniforms.uLightPosition, light.translation);
+        const lightCords= vec3.create();
+        mat4.getTranslation(lightCords, light.getGlobalTransform());
+        gl.uniform3fv(program.uniforms.uLightPosition, lightCords);
 
         let color = vec3.clone(light.color);
         vec3.scale(color, color, 1.0 / 255.0);
         gl.uniform3fv(program.uniforms.uLightColor,  color);
+
         gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
-        const proj = mat4.create();
+        color = vec3.clone(light.ambientColor);
+
+        vec3.scale(color, color, 1.0 / 255.0);
+        gl.uniform3fv(program.uniforms.uAmbientColor, color);
+        color = vec3.clone(light.diffuseColor);
+
+        vec3.scale(color, color, 1.0 / 255.0);
+        gl.uniform3fv(program.uniforms.uDiffuseColor, color);
+        color = vec3.clone(light.specularColor);
+
+        vec3.scale(color, color, 1.0 / 255.0);
+
         const viewMatrix = this.getViewMatrix(player);
         for (const node of scene.nodes) {
             this.renderNode(node, viewMatrix);
