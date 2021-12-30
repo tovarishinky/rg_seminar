@@ -16,7 +16,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/shader_testmap/shader_testmap.gltf');
+        await this.loader.load('../../common/models/map_base_test_prescale/map_base_test_prescale.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -44,7 +44,7 @@ class App extends Application {
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
 
-
+        this.updateCollisionParams();
     }
 
     updateCollisionParams() {
@@ -59,12 +59,12 @@ class App extends Application {
             node.mesh.primitives[0].attributes.POSITION.min = mb;
             node.mesh.primitives[0].attributes.POSITION.max = mbb;
             */
-            let mb = b.mesh.primitives[0].attributes.POSITION.min;
-            let mbb = b.mesh.primitives[0].attributes.POSITION.max;
+            let mb = node.mesh.primitives[0].attributes.POSITION.min;
+            let mbb = node.mesh.primitives[0].attributes.POSITION.max;
             
     
-            vec3.mul(mb, mb, b.scale);
-            vec3.mul(mbb, mbb, b.scale); 
+            vec3.mul(mb, mb, node.scale);
+            vec3.mul(mbb, mbb, node.scale); 
         });
     }
 
