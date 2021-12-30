@@ -7,27 +7,15 @@ layout (location = 2) in vec3 aNormal;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjection;
 
-uniform vec3 uLightAttenuation;
-uniform vec3 uLightPosition;
-
-
-out vec2 vTexCoord;
-out vec3 vEye;
-out vec3 vLight;
+out vec3 vVertexPosition;
 out vec3 vNormal;
-out float vAttenuation;
-out float attenuation;
+out vec2 vTexCoord;
+out mat4 viewMat;
 
 void main() {
-    vec3 vertexPosition = (uViewMatrix * aPosition).xyz;
-    vec3 lightPosition = (uViewMatrix * vec4(uLightPosition, 1)).xyz;
-    float d = distance(vertexPosition, lightPosition);
-    attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
-    
-    vNormal = (uViewMatrix * vec4(aNormal, 0)).xyz;
-    vLight = lightPosition - vertexPosition;
-    vEye = -vertexPosition;
-
+    vVertexPosition = (uViewMatrix * aPosition).xyz;
+    vNormal = aNormal;
+    viewMat=uViewMatrix;
     vTexCoord = aTexCoord;
     gl_Position = uProjection * uViewMatrix * aPosition;
 }
@@ -36,25 +24,34 @@ void main() {
 const fragment = `#version 300 es
 precision mediump float;
 
+
+
 uniform mediump sampler2D uTexture;
+
 uniform float uAmbient;
 uniform float uDiffuse;
 uniform float uSpecular;
+
 uniform float uShininess;
 uniform vec3 uLightColor;
-
-in vec3 vEye;
-in vec3 vLight;
+uniform vec3 uLightPosition;
+uniform vec3 uLightAttenuation;
+in mat4 viewMat;
+in vec3 vVertexPosition;
 in vec3 vNormal;
-in float attenuation;
 in vec2 vTexCoord;
 
 out vec4 oColor;
 
 void main() {
-    vec3 N = normalize(vNormal);
-    vec3 L = normalize(vLight);
-    vec3 E = normalize(vEye);
+
+    vec3 lightPosition = (viewMat * vec4(uLightPosition, 1)).xyz;
+    float d = distance(vVertexPosition, lightPosition);
+    float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
+        
+    vec3 N = (viewMat * vec4(vNormal, 0)).xyz;
+    vec3 L = normalize(lightPosition - vVertexPosition);
+    vec3 E = normalize(-vVertexPosition);
     vec3 R = normalize(reflect(-L, N));
     
     float lambert = max(0.0, dot(L, N));
