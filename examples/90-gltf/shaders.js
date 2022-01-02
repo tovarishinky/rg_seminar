@@ -6,6 +6,8 @@ layout (location = 2) in vec3 aNormal;
 
 uniform mat4 uViewMatrix;
 uniform mat4 uProjection;
+uniform mat4 uligtMatrix;
+uniform mat4 uModelMatrix;
 
 out vec3 vVertexPosition;
 out vec3 vNormal;
@@ -13,9 +15,9 @@ out vec2 vTexCoord;
 out mat4 viewMat;
 
 void main() {
-    vVertexPosition = (uViewMatrix * aPosition).xyz;
+    vVertexPosition = (uModelMatrix*aPosition).xyz;
     vNormal = aNormal;
-    viewMat=uViewMatrix;
+    viewMat=uligtMatrix;
     vTexCoord = aTexCoord;
     gl_Position = uProjection * uViewMatrix * aPosition;
 }
@@ -45,7 +47,7 @@ out vec4 oColor;
 
 void main() {
 
-    vec3 lightPosition = (viewMat * vec4(uLightPosition, 1)).xyz;
+    vec3 lightPosition = (vec4(uLightPosition, 1)).xyz;
     float d = distance(vVertexPosition, lightPosition);
     float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
         

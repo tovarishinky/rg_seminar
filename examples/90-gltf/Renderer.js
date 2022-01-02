@@ -201,29 +201,32 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uShininess, light.shininess);
         const lightCords= vec3.create();
         mat4.getTranslation(lightCords, light.getGlobalTransform());
-        gl.uniform3fv(program.uniforms.uLightPosition, lightCords);
+        gl.uniform3fv(program.uniforms.uLightPosition, light.translation);
 
         let color = vec3.clone(light.color);
         vec3.scale(color, color, 1.0 / 255.0);
         gl.uniform3fv(program.uniforms.uLightColor,  color);
 
         gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
+        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, ligt.matrix);
 
-        const viewMatrix = this.getViewMatrix(player);
+        const viewMatrix = player.matrix;
+        mat4.invert(viewMatrix,viewMatrix);
         for (const node of scene.nodes) {
-            this.renderNode(node, viewMatrix);
+            this.renderNode(node, viewMatrix,light);
         }
     }
 
-    renderNode(node, mvpMatrix) {
+    renderNode(node, mvpMatrix,light) {
         const gl = this.gl;
 
         mvpMatrix = mat4.clone(mvpMatrix);
         mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
-
         if (node.mesh) {
             const program = this.programs.simple;
             gl.uniformMatrix4fv(program.uniforms.uViewMatrix, false, mvpMatrix);
+            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.matrix);
+
             for (const primitive of node.mesh.primitives) {
                 this.renderPrimitive(primitive);
             }
