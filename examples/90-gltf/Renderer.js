@@ -208,17 +208,6 @@ export class Renderer {
         gl.uniform3fv(program.uniforms.uLightColor,  color);
 
         gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
-        color = vec3.clone(light.ambientColor);
-
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uAmbientColor, color);
-        color = vec3.clone(light.diffuseColor);
-
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uDiffuseColor, color);
-        color = vec3.clone(light.specularColor);
-
-        vec3.scale(color, color, 1.0 / 255.0);
 
         const viewMatrix = this.getViewMatrix(player);
         for (const node of scene.nodes) {
