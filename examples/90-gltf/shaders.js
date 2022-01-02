@@ -6,7 +6,6 @@ layout (location = 2) in vec3 aNormal;
 
 uniform mat4 uViewMatrix;
 uniform mat4 uProjection;
-uniform mat4 uligtMatrix;
 uniform mat4 uModelMatrix;
 
 out vec3 vVertexPosition;
@@ -17,7 +16,6 @@ out mat4 viewMat;
 void main() {
     vVertexPosition = (uModelMatrix*aPosition).xyz;
     vNormal = aNormal;
-    viewMat=uligtMatrix;
     vTexCoord = aTexCoord;
     gl_Position = uProjection * uViewMatrix * aPosition;
 }
@@ -33,6 +31,8 @@ uniform mediump sampler2D uTexture;
 uniform float uAmbient;
 uniform float uDiffuse;
 uniform float uSpecular;
+uniform mat4 uligtMatrix;
+
 
 uniform float uShininess;
 uniform vec3 uLightColor;
@@ -47,11 +47,11 @@ out vec4 oColor;
 
 void main() {
 
-    vec3 lightPosition = (vec4(uLightPosition, 1)).xyz;
+    vec3 lightPosition = (uligtMatrix*vec4(uLightPosition, 1)).xyz;
     float d = distance(vVertexPosition, lightPosition);
     float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
         
-    vec3 N = (viewMat * vec4(vNormal, 0)).xyz;
+    vec3 N = (uligtMatrix * vec4(vNormal, 0)).xyz;
     vec3 L = normalize(lightPosition - vVertexPosition);
     vec3 E = normalize(-vVertexPosition);
     vec3 R = normalize(reflect(-L, N));

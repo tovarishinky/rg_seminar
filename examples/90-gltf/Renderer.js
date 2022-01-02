@@ -208,7 +208,7 @@ export class Renderer {
         gl.uniform3fv(program.uniforms.uLightColor,  color);
 
         gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
-        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, ligt.matrix);
+        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, light.matrix);
 
         const viewMatrix = player.matrix;
         mat4.invert(viewMatrix,viewMatrix);
