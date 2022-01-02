@@ -11,7 +11,6 @@ uniform mat4 uModelMatrix;
 out vec3 vVertexPosition;
 out vec3 vNormal;
 out vec2 vTexCoord;
-out mat4 viewMat;
 
 void main() {
     vVertexPosition = (uModelMatrix*aPosition).xyz;
@@ -38,7 +37,6 @@ uniform float uShininess;
 uniform vec3 uLightColor;
 uniform vec3 uLightPosition;
 uniform vec3 uLightAttenuation;
-in mat4 viewMat;
 in vec3 vVertexPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
@@ -47,11 +45,11 @@ out vec4 oColor;
 
 void main() {
 
-    vec3 lightPosition = (uligtMatrix*vec4(uLightPosition, 1)).xyz;
+    vec3 lightPosition = vec4(uLightPosition, 1).xyz;
     float d = distance(vVertexPosition, lightPosition);
     float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
         
-    vec3 N = (uligtMatrix * vec4(vNormal, 0)).xyz;
+    vec3 N = vec4(vNormal, 0).xyz;
     vec3 L = normalize(lightPosition - vVertexPosition);
     vec3 E = normalize(-vVertexPosition);
     vec3 R = normalize(reflect(-L, N));
