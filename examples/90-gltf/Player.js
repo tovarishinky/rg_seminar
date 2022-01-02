@@ -27,6 +27,7 @@ export class Player extends Node {
         this.velocity = [0, 0, 0];
         this.mouseSensitivity = 0.002;
         this.friction = 0.2;
+        this.airFriction = 0.02;
         this.collisionMin = [-this.dims.width / 2, -this.dims.height, -this.dims.length / 2]; // collisionbox
         this.collisionMax = [this.dims.width / 2, 0.2, this.dims.length / 2]; // collisionbox
         this.feet = {
@@ -104,7 +105,7 @@ export class Player extends Node {
             vec3.set(c.velocity, c.velocity[0], up[1], c.velocity[2]); // use add for jump dependend on landing (if you jump after landing you get a penalty)
             setTimeout(() => { this.waitForJump = false; }, 700); // wawit 0.7s for next jump
         }
-        if (this.falling) {
+        if (this.falling) { // gravity
             vec3.add(acc, acc, down);
         }
         //console.log(this.autoJump);
@@ -124,11 +125,17 @@ export class Player extends Node {
             !this.keys['KeyS'] &&
             !this.keys['KeyD'] &&
             !this.keys['KeyA'] &&
-            !this.keys['Space'] &&
-            !this.falling) {
-            vec3.scale(c.velocity, c.velocity, 1 - c.friction);
+            !this.keys['Space']) {
+            const yVelocity = c.velocity[1];
+            if (this.falling) {
+                vec3.scale(c.velocity, c.velocity, 1 - c.airFriction);
+
+            } else {
+                vec3.scale(c.velocity, c.velocity, 1 - c.friction);
+            }
+            c.velocity[1] = yVelocity;
         }
-        console.log(this.falling);
+
         if (!this.falling) {
             vec3.set(c.velocity, c.velocity[0], Math.max(c.velocity[1], -1), c.velocity[2]);
         }

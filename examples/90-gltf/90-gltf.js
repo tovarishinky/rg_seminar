@@ -9,6 +9,7 @@ import { Renderer } from './Renderer.js';
 import { GUI } from '../../lib/dat.gui.module.js';
 import { Physics } from './Physics.js';
 import {Light} from "../90-gltf/Light.js";
+import { BlockMover } from './BlockMover.js';
 
 
 class App extends Application {
@@ -16,7 +17,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/map_base_test_prescale/map_base_test_prescale.gltf');
+        await this.loader.load('../../common/models/shader_testmap/shader_testmap.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -45,6 +46,12 @@ class App extends Application {
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
 
         this.updateCollisionParams();
+        //console.log(this.scene);
+        //console.log(this.collisionScene);
+
+        // block Mover
+        this.bm = new BlockMover(this.scene, this.collisionScene);
+        console.log(this.bm);
     }
 
     updateCollisionParams() {
@@ -88,6 +95,10 @@ class App extends Application {
         }
         if(this.light)
             this.light.updateMatrix();
+
+        if (this.bm) {
+            //this.bm.TestMove('CubeText.001', "aabb_004");
+        }
     }
 
     resize() {
