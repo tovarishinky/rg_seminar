@@ -6,6 +6,7 @@ export class Player extends Node {
         super(options);
 
         this.dims = { width: 0.6, height: 1.8, length: 0.6 }; // set collision box for player
+        this.crouchHeight = 0.8;
         this.gravity = -5; // set gravity
         this.jumpHeight = 12; // set Jump
         this.walkSpeed = 6; // set max walking speed
@@ -23,6 +24,8 @@ export class Player extends Node {
         this.sprint = false;
         this.player = null;
 
+        this.crouching = false;
+        this.standUp = false;
         this.autoJump = false;
         this.velocity = [0, 0, 0];
         this.mouseSensitivity = 0.002;
@@ -30,6 +33,18 @@ export class Player extends Node {
         this.airFriction = 0.02;
         this.collisionMin = [-this.dims.width / 2, -this.dims.height, -this.dims.length / 2]; // collisionbox
         this.collisionMax = [this.dims.width / 2, 0.2, this.dims.length / 2]; // collisionbox
+        this.plantFeet();
+
+        setInterval(() => {
+            console.log(
+                'x: ', Math.round(this.translation[0]).toString(),
+                '\ny: ', Math.round(this.translation[1]).toString(),
+                '\nz: ', Math.round(this.translation[2]).toString(),
+                '\nspeed: ', this.velocity)
+        }, 500); // TODO remove - debug
+    }
+
+    plantFeet() {
         this.feet = {
             min: [
                 this.collisionMin[0] + 0.2,
@@ -42,19 +57,6 @@ export class Player extends Node {
                 this.collisionMax[2] - 0.2
             ]
         };
-
-        setInterval(() => {
-            console.log(
-                'x: ', Math.round(this.translation[0]).toString(),
-                '\ny: ', Math.round(this.translation[1]).toString(),
-                '\nz: ', Math.round(this.translation[2]).toString(),
-                '\nspeed: ', this.velocity)
-        }, 500); // TODO remove - debug
-    }
-
-    setFeet(ft) {
-        this.feet = ft;
-        console.log(this.feet);
     }
 
     getPlayer() {
@@ -98,6 +100,33 @@ export class Player extends Node {
             this.sprint = false;
             c.maxSpeed = c.walkSpeed;
         }
+        /* Crouching 
+        Zmanjsa collision box za 1 enoto (trenutno je player visok 2 - 1.8 do kamere + 0.2 nad kamero, torej si v crouch visok 1 enoto)
+        Pri pocepu na dol, pades na tla zaradi gravitacije, pri pocepu na gor, pa te funkcija transformira, da ne pride do clippanja
+        Pocep te ne omejuje pri hitrosti, skoku ipd.
+        Pri skoku na ploscad, si lahko pomagas s crouchom, tako kot bi zares skocil, in dvignil noge da visje platforme (crouch omogoca skok na visje ploscadi)
+        */
+
+        if (this.keys['ControlLeft'] || this.keys['KeyC']) {
+            if (!this.crouching) {
+                this.collisionMin[1] = -this.crouchHeight;
+                this.plantFeet();
+                setTimeout(() => {this.crouching = true;}, 500);
+            } else {
+                this.collisionMin[1] = -this.dims.height;
+                this.plantFeet();
+                setTimeout(() => {this.crouching = false;}, 500);
+                if (!this.standUp) {
+                    this.standUp = true;
+                    if (!this.falling) {
+                        vec3.add(this.translation, this.translation, vec3.fromValues(0,this.crouchHeight,0));
+                    }
+                    setTimeout(() => {this.standUp = false;}, 500);
+                }
+                
+
+            }
+        } 
 
         // verti move
         if (!this.falling && !this.waitForJump && this.keys['Space']) {
