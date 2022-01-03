@@ -35,13 +35,26 @@ export class Player extends Node {
         this.collisionMax = [this.dims.width / 2, 0.2, this.dims.length / 2]; // collisionbox
         this.plantFeet();
 
-        setInterval(() => {
-            console.log(
-                'x: ', Math.round(this.translation[0]).toString(),
-                '\ny: ', Math.round(this.translation[1]).toString(),
-                '\nz: ', Math.round(this.translation[2]).toString(),
-                '\nspeed: ', this.velocity)
-        }, 500); // TODO remove - debug
+        // Roka: dostop = player.children[0].getGlobalTransform();
+        this.initHand();
+        
+
+        // setInterval(() => {
+        //     console.log(
+        //         'x: ', Math.round(this.translation[0]).toString(),
+        //         '\ny: ', Math.round(this.translation[1]).toString(),
+        //         '\nz: ', Math.round(this.translation[2]).toString(),
+        //         '\nspeed: ', this.velocity)
+        // }, 500); // TODO remove - debug
+
+    }
+
+    initHand() {
+        const hand = new Node({
+            'translation': vec3.fromValues(0.1, -0.1, 0),
+            'name': 'Hand'
+        })
+        this.addChild(hand);
     }
 
     plantFeet() {
@@ -170,6 +183,12 @@ export class Player extends Node {
         const len = vec3.len(vec3.set(vec3.create(), c.velocity[0], 0, c.velocity[2]));
         if (len > c.maxSpeed) {
             vec3.mul(c.velocity, c.velocity, vec3.set(vec3.create(), c.maxSpeed / len, 1, c.maxSpeed / len));
+        }
+
+        // smrt
+
+        if (this.translation[1] < -30) {
+            this.translation = vec3.fromValues(0, 5, 0);
         }
     }
 
