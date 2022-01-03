@@ -10,12 +10,12 @@ export class Light extends Node {
             '\nz: ', Math.round(this.translation[2]).toString(),
             '\nspeed: ', this.velocity)}, 500); // TODO remove - debug
         Object.assign(this, {
-            ambient          : 0.2,
-            diffuse          : 6,
-            specular         : 1,
+            ambient          : 0.1,
+            diffuse          : 1,
+            specular         : 0.8,
             shininess        : 10,
             color            : [255, 255, 255],
-            attenuatuion     : [1.0, 0, 0.02]
+            attenuatuion     : [1.0, 0, 0.09]
         });
     }
 

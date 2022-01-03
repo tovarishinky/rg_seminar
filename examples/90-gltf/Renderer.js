@@ -200,8 +200,10 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uSpecular, light.specular);
         gl.uniform1f(program.uniforms.uShininess, light.shininess);
         const lightCords= vec3.create();
-        mat4.getTranslation(lightCords, light.getGlobalTransform());
-        gl.uniform3fv(program.uniforms.uLightPosition, light.translation);
+        mat4.getTranslation(lightCords, player.children[0].getGlobalTransform());
+        light.translation=lightCords;
+        light.updateMatrix();
+        gl.uniform3fv(program.uniforms.uLightPosition, lightCords);
 
         let color = vec3.clone(light.color);
         vec3.scale(color, color, 1.0 / 255.0);
