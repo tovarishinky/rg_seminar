@@ -1947,33 +1947,6 @@
                     "index" : 0
                 }
             }
-        },
-        {
-            "doubleSided" : true,
-            "name" : "Material.001",
-            "pbrMetallicRoughness" : {
-                "baseColorTexture" : {
-                    "index" : 1
-                }
-            }
-        },
-        {
-            "doubleSided" : true,
-            "name" : "Material.002",
-            "pbrMetallicRoughness" : {
-                "baseColorTexture" : {
-                    "index" : 2
-                }
-            }
-        },
-        {
-            "doubleSided" : true,
-            "name" : "Material.003",
-            "pbrMetallicRoughness" : {
-                "baseColorTexture" : {
-                    "index" : 3
-                }
-            }
         }
     ],
     "meshes" : [
@@ -3974,7 +3947,8 @@
                         "NORMAL" : 546,
                         "TEXCOORD_0" : 547
                     },
-                    "indices" : 103
+                    "indices" : 103,
+                    "material" : 0
                 }
             ]
         },
@@ -3987,7 +3961,8 @@
                         "NORMAL" : 549,
                         "TEXCOORD_0" : 550
                     },
-                    "indices" : 103
+                    "indices" : 103,
+                    "material" : 0
                 }
             ]
         },
@@ -4000,7 +3975,8 @@
                         "NORMAL" : 552,
                         "TEXCOORD_0" : 553
                     },
-                    "indices" : 103
+                    "indices" : 103,
+                    "material" : 0
                 }
             ]
         },
@@ -4014,7 +3990,7 @@
                         "TEXCOORD_0" : 556
                     },
                     "indices" : 453,
-                    "material" : 1
+                    "material" : 0
                 }
             ]
         },
@@ -4028,7 +4004,7 @@
                         "TEXCOORD_0" : 559
                     },
                     "indices" : 453,
-                    "material" : 2
+                    "material" : 0
                 }
             ]
         },
@@ -4042,7 +4018,7 @@
                         "TEXCOORD_0" : 562
                     },
                     "indices" : 398,
-                    "material" : 3
+                    "material" : 0
                 }
             ]
         },
@@ -4055,24 +4031,13 @@
                         "NORMAL" : 564,
                         "TEXCOORD_0" : 565
                     },
-                    "indices" : 566
+                    "indices" : 566,
+                    "material" : 0
                 }
             ]
         }
     ],
     "textures" : [
-        {
-            "sampler" : 0,
-            "source" : 0
-        },
-        {
-            "sampler" : 0,
-            "source" : 0
-        },
-        {
-            "sampler" : 0,
-            "source" : 0
-        },
         {
             "sampler" : 0,
             "source" : 0
