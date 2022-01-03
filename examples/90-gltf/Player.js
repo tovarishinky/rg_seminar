@@ -53,7 +53,7 @@ export class Player extends Node {
             ],
             max: [
                 this.collisionMax[0] - 0.2,
-                this.collisionMax[1] + 0.1,
+                this.collisionMax[1] - 0.5,
                 this.collisionMax[2] - 0.2
             ]
         };
@@ -69,8 +69,6 @@ export class Player extends Node {
 
     update(dt) {
         const c = this;
-        // TODO falling boolean
-
 
         const forward = vec3.set(vec3.create(), -Math.sin(c.rotation[1]) * this.mvAcc, 0, -Math.cos(c.rotation[1]) * this.mvAcc);
         const right = vec3.set(vec3.create(),
@@ -139,7 +137,6 @@ export class Player extends Node {
         }
         //console.log(this.autoJump);
         if (this.autoJump) {
-            //this.waitForJump = true;
             vec3.set(c.velocity, c.velocity[0], up[1] * 0.2, c.velocity[2]);
             this.autoJump = false;
         }
