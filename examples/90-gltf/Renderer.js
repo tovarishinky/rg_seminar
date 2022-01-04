@@ -2,7 +2,7 @@ import {mat4, vec3} from '../../lib/gl-matrix-module.js';
 
 import { WebGL } from '../../common/engine/WebGL.js';
 
-import { shaders } from './shaders.js';
+import { shaders } from './shaders4Lights.js';
 
 // This class prepares all assets for use with WebGL
 // and takes care of rendering.
@@ -14,7 +14,7 @@ export class Renderer {
         this.glObjects = new Map();
         this.programs = WebGL.buildPrograms(gl, shaders);
 
-        gl.clearColor(1, 1, 1, 1);
+        gl.clearColor(0, 0, 0, 1);
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
     }
@@ -95,7 +95,6 @@ export class Renderer {
     }
 
     preparePrimitive(primitive) {
-        console.log(primitive);
         if (this.glObjects.has(primitive)) {
             return this.glObjects.get(primitive);
         }
@@ -186,7 +185,7 @@ export class Renderer {
         return mvpMatrix;
     }
 
-    render(scene, player, light) {
+    render(scene, player, lights) {
         const gl = this.gl;
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -195,27 +194,32 @@ export class Renderer {
         gl.useProgram(program.program);
         gl.uniform1i(program.uniforms.uTexture, 0);
         gl.uniformMatrix4fv(program.uniforms.uProjection, false, player.camera.matrix);
-        gl.uniform1f(program.uniforms.uAmbient, light.ambient);
-        gl.uniform1f(program.uniforms.uDiffuse, light.diffuse);
-        gl.uniform1f(program.uniforms.uSpecular, light.specular);
-        gl.uniform1f(program.uniforms.uShininess, light.shininess);
+        gl.uniform1f(program.uniforms.uAmbient, lights[0].ambient);
+        gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
+        gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
+        gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
         const lightCords= vec3.create();
         mat4.getTranslation(lightCords, player.children[0].getGlobalTransform());
-        light.translation=lightCords;
-        light.updateMatrix();
-        gl.uniform3fv(program.uniforms.uLightPosition, lightCords);
+        player.children[0].addChild(lights[0]);
+        lights[0].translation = lightCords;
+        lights[0].updateMatrix();
+        for (let i = 0; i < lights.length; i++) {
+            gl.uniform3fv(program.uniforms['uLightPosition[' + i + ']'], lights[i].translation);
+        }
 
-        let color = vec3.clone(light.color);
-        vec3.scale(color, color, 1.0 / 255.0);
-        gl.uniform3fv(program.uniforms.uLightColor,  color);
+        for (let i = 0; i < lights.length; i++) {
+            let color = vec3.clone(lights[i].color);
+            vec3.scale(color, color, 1.0 / 255.0);
+            gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
+        }
 
-        gl.uniform3fv(program.uniforms.uLightAttenuation, light.attenuatuion);
-        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, light.matrix);
+        gl.uniform3fv(program.uniforms.uLightAttenuation, lights[0].attenuatuion);
+        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, lights[0].matrix);
 
         const viewMatrix = player.matrix;
         mat4.invert(viewMatrix,viewMatrix);
         for (const node of scene.nodes) {
-            this.renderNode(node, viewMatrix,light);
+            this.renderNode(node, viewMatrix,lights[0]);
         }
     }
 
