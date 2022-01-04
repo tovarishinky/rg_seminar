@@ -4,11 +4,11 @@ export class Light extends Node {
 
     constructor(options = {}) {
         super(options);
-        setInterval(() => {console.log(
-            'x: ', Math.round(this.translation[0]).toString(),
-            '\ny: ', Math.round(this.translation[1]).toString(),
-            '\nz: ', Math.round(this.translation[2]).toString(),
-            '\nspeed: ', this.velocity)}, 500); // TODO remove - debug
+        // setInterval(() => {console.log(
+        //     'x: ', Math.round(this.translation[0]).toString(),
+        //     '\ny: ', Math.round(this.translation[1]).toString(),
+        //     '\nz: ', Math.round(this.translation[2]).toString(),
+        //     '\nspeed: ', this.velocity)}, 500); // TODO remove - debug
         Object.assign(this, {
             ambient          : 0.1,
             diffuse          : 1,

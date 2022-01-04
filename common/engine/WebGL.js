@@ -14,7 +14,7 @@ static createShader(gl, source, type) {
 
 static createProgram(gl, shaders) {
     const program = gl.createProgram();
-    for (const shader of shaders) {
+    for (let shader of shaders) {
         gl.attachShader(program, shader);
     }
     gl.linkProgram(program);
@@ -24,18 +24,25 @@ static createProgram(gl, shaders) {
         throw new Error('Cannot link program\nInfo log:\n' + log);
     }
 
-    const attributes = {};
+    let attributes = {};
     const activeAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
     for (let i = 0; i < activeAttributes; i++) {
         const info = gl.getActiveAttrib(program, i);
         attributes[info.name] = gl.getAttribLocation(program, info.name);
     }
 
-    const uniforms = {};
+    let uniforms = {};
     const activeUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
     for (let i = 0; i < activeUniforms; i++) {
         const info = gl.getActiveUniform(program, i);
-        uniforms[info.name] = gl.getUniformLocation(program, info.name);
+        if (info.name.includes('[0]')) {
+            for (let j = 0; j < info.size; j++) {
+                let uniformName = info.name.substring(0, info.name.indexOf('[') + 1) + j + info.name.substring(info.name.indexOf(']'));
+                uniforms[uniformName] = gl.getUniformLocation(program, uniformName);
+            }
+        } else {
+            uniforms[info.name] = gl.getUniformLocation(program, info.name);
+        }
     }
 
     return { program, attributes, uniforms };

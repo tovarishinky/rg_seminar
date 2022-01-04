@@ -17,7 +17,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/shader_testmap/shader_testmap.gltf');
+        await this.loader.load('../../common/models/map_base_test_prescale/map_base_test_prescale.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -31,6 +31,9 @@ class App extends Application {
 
         this.lights = this.scene.getLights();
         this.light = this.lights[0];
+        this.lights[1].color=[255,0,0];
+        this.lights[2].color=[0,255,0];
+        this.lights[3].color=[0,0,255];
         console.log(this.lights);
         this.light.translation = vec3.fromValues(0, 5, 0);
         this.light.updateMatrix();
@@ -77,7 +80,7 @@ class App extends Application {
 
     render() {
         if (this.renderer && this.player) {
-            this.renderer.render(this.scene, this.player, this.light);
+            this.renderer.render(this.scene, this.player, this.lights);
         }
     }
 
@@ -93,8 +96,11 @@ class App extends Application {
         if (this.physics && this.player) {
             this.physics.update(dt, this.player);
         }
-        if(this.light)
-            this.light.updateMatrix();
+        if(this.lights) {
+            for (let i = 0; i < this.lights.length; i++) {
+                this.lights[i].updateMatrix();
+            }
+        }
 
         if (this.bm) {
             //this.bm.TestMove('CubeText.001', "aabb_004");
@@ -140,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gui.add(app.light, 'specular', 0.0, 1.0);
         gui.add(app.light, 'shininess', 0.0, 1000.0);
         gui.addColor(app.light, 'color');
-        gui.add(app.light.translation, 0, -5, 5.0);
-        gui.add(app.light.translation, 1, 0, 10.0);
-        gui.add(app.light.translation, 2, -5, 5);
+        gui.add(app.player.translation, 0, -5, 5.0);
+        gui.add(app.player.translation, 1, 0, 100.0);
+        gui.add(app.player.translation, 2, -5, 5);
     }, 1000);
 });
