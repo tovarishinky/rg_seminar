@@ -156,7 +156,10 @@
                 145,
                 146,
                 147,
-                148
+                148,
+                149,
+                150,
+                151
             ]
         }
     ],
@@ -1925,7 +1928,7 @@
         },
         {
             "mesh" : 148,
-            "name" : "Light",
+            "name" : "Light1",
             "scale" : [
                 0.30000001192092896,
                 0.30000001192092896,
@@ -1935,6 +1938,48 @@
                 0,
                 12,
                 -10
+            ]
+        },
+        {
+            "mesh" : 149,
+            "name" : "Light2",
+            "scale" : [
+                0.30000001192092896,
+                0.30000001192092896,
+                0.30000001192092896
+            ],
+            "translation" : [
+                -2,
+                2.516249895095825,
+                -8
+            ]
+        },
+        {
+            "mesh" : 150,
+            "name" : "Light3",
+            "scale" : [
+                0.30000001192092896,
+                0.30000001192092896,
+                0.30000001192092896
+            ],
+            "translation" : [
+                2,
+                2.5146048069000244,
+                -8
+            ]
+        },
+        {
+            "mesh" : 151,
+            "name" : "Light4",
+            "scale" : [
+                0.30000001192092896,
+                0.30000001192092896,
+                0.30000001192092896
+            ],
+            "translation" : [
+                0,
+                12,
+                -56.514339447021484
             ]
         }
     ],
@@ -4030,6 +4075,48 @@
                         "POSITION" : 563,
                         "NORMAL" : 564,
                         "TEXCOORD_0" : 565
+                    },
+                    "indices" : 566,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Sphere.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 567,
+                        "NORMAL" : 568,
+                        "TEXCOORD_0" : 569
+                    },
+                    "indices" : 566,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Sphere.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 570,
+                        "NORMAL" : 571,
+                        "TEXCOORD_0" : 572
+                    },
+                    "indices" : 566,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Sphere.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 573,
+                        "NORMAL" : 574,
+                        "TEXCOORD_0" : 575
                     },
                     "indices" : 566,
                     "material" : 0
@@ -8942,6 +9029,90 @@
             "componentType" : 5123,
             "count" : 2880,
             "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 567,
+            "componentType" : 5126,
+            "count" : 1984,
+            "max" : [
+                0.9999997019767761,
+                1,
+                0.9999994039535522
+            ],
+            "min" : [
+                -0.9999990463256836,
+                -1,
+                -0.9999987483024597
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 568,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 569,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 570,
+            "componentType" : 5126,
+            "count" : 1984,
+            "max" : [
+                0.9999997019767761,
+                1,
+                0.9999994039535522
+            ],
+            "min" : [
+                -0.9999990463256836,
+                -1,
+                -0.9999987483024597
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 571,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 572,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 573,
+            "componentType" : 5126,
+            "count" : 1984,
+            "max" : [
+                0.9999997019767761,
+                1,
+                0.9999994039535522
+            ],
+            "min" : [
+                -0.9999990463256836,
+                -1,
+                -0.9999987483024597
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 574,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 575,
+            "componentType" : 5126,
+            "count" : 1984,
+            "type" : "VEC2"
         }
     ],
     "bufferViews" : [
@@ -11779,6 +11950,51 @@
             "buffer" : 0,
             "byteLength" : 5760,
             "byteOffset" : 9053676
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9059436
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9083244
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 15872,
+            "byteOffset" : 9107052
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9122924
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9146732
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 15872,
+            "byteOffset" : 9170540
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9186412
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 9210220
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 15872,
+            "byteOffset" : 9234028
         }
     ],
     "samplers" : [
@@ -11789,7 +12005,7 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 9059436,
+            "byteLength" : 9249900,
             "uri" : "map_base_test_prescale.bin"
         }
     ]
