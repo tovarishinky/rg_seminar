@@ -8,10 +8,10 @@ export class Player extends Node {
         this.dims = { width: 0.6, height: 1.8, length: 0.6 }; // set collision box for player
         this.crouchHeight = 0.8;
         this.gravity = -5; // set gravity
-        this.jumpHeight = 12; // set Jump
-        this.walkSpeed = 6; // set max walking speed
-        this.sprintSpeed = 8; // set max sprinting speed
-        this.mvAcc = 15; // set move acceleration TODO not implemeted yet
+        this.jumpHeight = 9; // set Jump    O:12
+        this.walkSpeed = 4; // set max walking speed O: 6
+        this.sprintSpeed = 6; // set max sprinting speed O: 8
+        this.mvAcc = 15; // set move acceleration 
         this.acceleration = 5; // set acceleration
         this.maxSpeed = this.walkSpeed;
 
