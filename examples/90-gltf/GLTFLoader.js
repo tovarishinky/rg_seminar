@@ -11,6 +11,8 @@ import { Node } from './Node.js';
 import { Scene } from './Scene.js';
 import { vec3 } from '../../lib/gl-matrix-module.js';
 import {Light} from "../90-gltf/Light.js";
+import { Drop } from './Drop.js';
+import { Pickup } from './Pickup.js';
 
 // This class loads all GLTF resources and instantiates
 // the corresponding classes. Keep in mind that it loads
@@ -296,6 +298,12 @@ export class GLTFLoader {
         let node;
         if(gltfSpec.name.startsWith('Light')) {
             node= new Light(options);
+        }
+        else if (gltfSpec.name.startsWith('Drop')) {
+            node = new Drop(options);
+        }
+        else if (gltfSpec.name.startsWith('Coin')) {
+            node = new Pickup(options);
         }
         else {
             node = new Node(options);
