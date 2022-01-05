@@ -10,8 +10,6 @@ import { GUI } from '../../lib/dat.gui.module.js';
 import { Physics } from './Physics.js';
 import {Light} from "../90-gltf/Light.js";
 import { BlockMover } from './BlockMover.js';
-import { ParticleMover } from './ParticleMover.js';
-import { PickupMover } from './PickupMover.js';
 
 
 class App extends Application {
@@ -19,7 +17,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/shader_testmap/shader_testmap.gltf');
+        await this.loader.load('../../common/models/map_base_test_prescale/map_base_test_prescale.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -33,12 +31,15 @@ class App extends Application {
 
         this.lights = this.scene.getLights();
         this.light = this.lights[0];
+        this.lights[1].color=[255,0,0];
+        this.lights[2].color=[0,255,0];
+        this.lights[3].color=[0,0,255];
         console.log(this.lights);
         this.light.translation = vec3.fromValues(0, 5, 0);
         this.light.updateMatrix();
         this.scene.addNode(this.light);
 
-        this.physics = new Physics(this.collisionScene, this.scene);
+        this.physics = new Physics(this.collisionScene);
 
         this.renderer = new Renderer(this.gl);
         this.renderer.prepareScene(this.scene);
@@ -53,10 +54,7 @@ class App extends Application {
 
         // block Mover
         this.bm = new BlockMover(this.scene, this.collisionScene);
-        console.log(this.scene);
-        console.log(this.collisionScene);
-        this.pm = new ParticleMover(this.scene);
-        this.pickupM = new PickupMover(this.scene);
+        console.log(this.bm);
     }
 
     updateCollisionParams() {
@@ -64,25 +62,25 @@ class App extends Application {
             /*
             let mb = node.mesh.primitives[0].attributes.POSITION.min;
             let mbb = node.mesh.primitives[0].attributes.POSITION.max;
-            
+
             vec3.transformMat4(mb, mb, b.matrix);
             vec3.transformMat4(mbb, mbb, b.matrix);
-            
+
             node.mesh.primitives[0].attributes.POSITION.min = mb;
             node.mesh.primitives[0].attributes.POSITION.max = mbb;
             */
             let mb = node.mesh.primitives[0].attributes.POSITION.min;
             let mbb = node.mesh.primitives[0].attributes.POSITION.max;
-            
-    
+
+
             vec3.mul(mb, mb, node.scale);
-            vec3.mul(mbb, mbb, node.scale); 
+            vec3.mul(mbb, mbb, node.scale);
         });
     }
 
     render() {
         if (this.renderer && this.player) {
-            this.renderer.render(this.scene, this.player, this.light);
+            this.renderer.render(this.scene, this.player, this.lights);
         }
     }
 
@@ -98,17 +96,14 @@ class App extends Application {
         if (this.physics && this.player) {
             this.physics.update(dt, this.player);
         }
-        if(this.light)
-            this.light.updateMatrix();
+        if(this.lights) {
+            for (let i = 0; i < this.lights.length; i++) {
+                this.lights[i].updateMatrix();
+            }
+        }
 
         if (this.bm) {
             //this.bm.TestMove('CubeText.001', "aabb_004");
-        }
-        if (this.pm) {
-            this.pm.update(dt);
-        }
-        if (this.pickupM) {
-            this.pickupM.update(dt);
         }
     }
 
@@ -125,8 +120,8 @@ class App extends Application {
 
     enableCamera() {
         this.canvas.requestPointerLock();
-    }  
-    
+    }
+
     pointerlockchangeHandler() {
         if (!this.player) {
             return;
@@ -151,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gui.add(app.light, 'specular', 0.0, 1.0);
         gui.add(app.light, 'shininess', 0.0, 1000.0);
         gui.addColor(app.light, 'color');
-        gui.add(app.light.translation, 0, -5, 5.0);
-        gui.add(app.light.translation, 1, 0, 10.0);
-        gui.add(app.light.translation, 2, -5, 5);
+        gui.add(app.player.translation, 0, -5, 5.0);
+        gui.add(app.player.translation, 1, 0, 100.0);
+        gui.add(app.player.translation, 2, -5, 5);
     }, 1000);
 });
