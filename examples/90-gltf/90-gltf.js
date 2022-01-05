@@ -33,10 +33,9 @@ class App extends Application {
 
         this.lights = this.scene.getLights();
         this.light = this.lights[0];
-        console.log(this.lights);
-        this.light.translation = vec3.fromValues(0, 5, 0);
-        this.light.updateMatrix();
-        this.scene.addNode(this.light);
+        this.lights[1].color=[255,0,0];
+        this.lights[2].color=[0,255,0];
+        this.lights[3].color=[0,0,255];
 
         this.physics = new Physics(this.collisionScene, this.scene);
 
@@ -64,25 +63,25 @@ class App extends Application {
             /*
             let mb = node.mesh.primitives[0].attributes.POSITION.min;
             let mbb = node.mesh.primitives[0].attributes.POSITION.max;
-            
+
             vec3.transformMat4(mb, mb, b.matrix);
             vec3.transformMat4(mbb, mbb, b.matrix);
-            
+
             node.mesh.primitives[0].attributes.POSITION.min = mb;
             node.mesh.primitives[0].attributes.POSITION.max = mbb;
             */
             let mb = node.mesh.primitives[0].attributes.POSITION.min;
             let mbb = node.mesh.primitives[0].attributes.POSITION.max;
-            
-    
+
+
             vec3.mul(mb, mb, node.scale);
-            vec3.mul(mbb, mbb, node.scale); 
+            vec3.mul(mbb, mbb, node.scale);
         });
     }
 
     render() {
         if (this.renderer && this.player) {
-            this.renderer.render(this.scene, this.player, this.light);
+            this.renderer.render(this.scene, this.player, this.lights);
         }
     }
 
@@ -98,8 +97,11 @@ class App extends Application {
         if (this.physics && this.player) {
             this.physics.update(dt, this.player);
         }
-        if(this.light)
-            this.light.updateMatrix();
+        if(this.lights) {
+            for (let i = 0; i < this.lights.length; i++) {
+                this.lights[i].updateMatrix();
+            }
+        }
 
         if (this.bm) {
             //this.bm.TestMove('CubeText.001', "aabb_004");
@@ -125,8 +127,8 @@ class App extends Application {
 
     enableCamera() {
         this.canvas.requestPointerLock();
-    }  
-    
+    }
+
     pointerlockchangeHandler() {
         if (!this.player) {
             return;
