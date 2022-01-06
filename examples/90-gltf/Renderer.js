@@ -222,16 +222,37 @@ export class Renderer {
         for (const node of scene.nodes) {
             this.renderNode(node, viewMatrix,lights[0]);
         }
+        this.renderHand(lights[0],viewMatrix);
     }
 
     renderNode(node, mvpMatrix,light) {
         const gl = this.gl;
         if(node.name=="Light1") {
-            gl.disable(gl.DEPTH_TEST);
+            return;
         }
         else {
             gl.enable(gl.DEPTH_TEST);
         }
+        mvpMatrix = mat4.clone(mvpMatrix);
+        mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
+        if (node.mesh) {
+            const program = this.programs.simple;
+            gl.uniformMatrix4fv(program.uniforms.uViewMatrix, false, mvpMatrix);
+            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.matrix);
+
+            for (const primitive of node.mesh.primitives) {
+                this.renderPrimitive(primitive);
+            }
+        }
+
+        for (const child of node.children) {
+            this.renderNode(child, mvpMatrix);
+        }
+    }
+
+    renderHand(node, mvpMatrix,light) {
+        const gl = this.gl;
+        gl.disable(gl.DEPTH_TEST);
         mvpMatrix = mat4.clone(mvpMatrix);
         mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
         if (node.mesh) {
