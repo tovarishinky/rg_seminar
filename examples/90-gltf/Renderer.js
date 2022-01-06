@@ -3,6 +3,7 @@ import {mat4, vec3} from '../../lib/gl-matrix-module.js';
 import { WebGL } from '../../common/engine/WebGL.js';
 
 import { shaders } from './shaders4Lights.js';
+import {Light} from "./Light.js";
 
 // This class prepares all assets for use with WebGL
 // and takes care of rendering.
@@ -225,7 +226,12 @@ export class Renderer {
 
     renderNode(node, mvpMatrix,light) {
         const gl = this.gl;
-
+        if(node.name=="Light1") {
+            gl.disable(gl.DEPTH_TEST);
+        }
+        else {
+            gl.enable(gl.DEPTH_TEST);
+        }
         mvpMatrix = mat4.clone(mvpMatrix);
         mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
         if (node.mesh) {

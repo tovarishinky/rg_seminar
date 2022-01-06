@@ -19,7 +19,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1      * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/shader_testmap/shader_testmap.gltf');
+        await this.loader.load('../../common/models/map1_test/map1_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -33,9 +33,10 @@ class App extends Application {
 
         this.lights = this.scene.getLights();
         this.light = this.lights[0];
-        this.lights[1].color=[255,0,0];
-        this.lights[2].color=[0,255,0];
-        this.lights[3].color=[0,0,255];
+        this.lights[0].color=[248,141,51];
+        this.lights[1].color=[248,141,51];
+        this.lights[2].color=[248,141,51];
+        this.lights[3].color=[248,141,51];
 
         this.physics = new Physics(this.collisionScene, this.scene);
 
