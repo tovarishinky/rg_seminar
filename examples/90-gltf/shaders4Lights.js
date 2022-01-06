@@ -61,7 +61,9 @@ void main() {
         float diffuse = uDiffuse * lambert;
         float specular = uSpecular * phong;
         
-        vec3 Light = ((ambient + diffuse + specular) * attenuation) * uLightColor[i];
+        vec3 diffuseLight = vec3(245,199,49)*specular;
+        
+        vec3 Light = ((ambient + diffuse) * attenuation) * uLightColor[i]+(diffuseLight * 0.01)* attenuation;
         oColor += texture(uTexture, vTexCoord) * vec4(Light, 1);
     }
 }

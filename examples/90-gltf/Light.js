@@ -12,8 +12,8 @@ export class Light extends Node {
         Object.assign(this, {
             ambient          : 0.1,
             diffuse          : 1,
-            specular         : 0.8,
-            shininess        : 10,
+            specular         : 0.4,
+            shininess        : 6,
             color            : [255, 255, 255],
             attenuatuion     : [1.0, 0, 0.09]
         });
