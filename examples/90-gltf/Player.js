@@ -52,7 +52,7 @@ export class Player extends Node {
 
     initHand() {
         const hand = new Node({
-            'translation': vec3.fromValues(0.5, -0.5, -0.5),
+            'translation': vec3.fromValues(0.6, -0.2, -0.5),
             'name': 'Hand'
         })
         this.addChild(hand);
