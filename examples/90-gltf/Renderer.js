@@ -252,7 +252,7 @@ export class Renderer {
 
     renderHand(node, mvpMatrix,light) {
         const gl = this.gl;
-        gl.disable(gl.DEPTH_TEST);
+        gl.clear(gl.DEPTH_BUFFER_BIT);
         mvpMatrix = mat4.clone(mvpMatrix);
         mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
         if (node.mesh) {
