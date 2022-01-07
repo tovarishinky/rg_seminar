@@ -23,7 +23,6 @@ class App extends Application {
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
-        console.log((this.scene.nodes[6]));
         this.collisionScene = await scenes[1];
 
         this.player = new Player();
@@ -157,5 +156,5 @@ document.addEventListener('DOMContentLoaded', () => {
         gui.add(app.light.translation, 0, -5, 5.0);
         gui.add(app.light.translation, 1, 0, 10.0);
         gui.add(app.light.translation, 2, -5, 5);
-    }, 1000);
+    }, 5000);
 });
