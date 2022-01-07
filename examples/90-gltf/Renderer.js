@@ -201,8 +201,8 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
         const lightCords= vec3.create();
         mat4.getTranslation(lightCords, player.children[0].getGlobalTransform());
-        player.children[0].addChild(lights[0]);
         lights[0].translation = lightCords;
+        lights[0].rotation = player.rotation;
         lights[0].updateMatrix();
         for (let i = 0; i < lights.length; i++) {
             gl.uniform3fv(program.uniforms['uLightPosition[' + i + ']'], lights[i].translation);
@@ -215,7 +215,7 @@ export class Renderer {
         }
 
         gl.uniform3fv(program.uniforms.uLightAttenuation, lights[0].attenuatuion);
-        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, lights[0].matrix);
+        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, lights[0].getGlobalTransform());
 
         const viewMatrix = player.matrix;
         mat4.invert(viewMatrix,viewMatrix);
@@ -234,11 +234,11 @@ export class Renderer {
             gl.enable(gl.DEPTH_TEST);
         }
         mvpMatrix = mat4.clone(mvpMatrix);
-        mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
+        mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
         if (node.mesh) {
             const program = this.programs.simple;
             gl.uniformMatrix4fv(program.uniforms.uViewMatrix, false, mvpMatrix);
-            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.matrix);
+            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
 
             for (const primitive of node.mesh.primitives) {
                 this.renderPrimitive(primitive);
@@ -254,11 +254,11 @@ export class Renderer {
         const gl = this.gl;
         gl.clear(gl.DEPTH_BUFFER_BIT);
         mvpMatrix = mat4.clone(mvpMatrix);
-        mat4.mul(mvpMatrix, mvpMatrix, node.matrix);
+        mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
         if (node.mesh) {
             const program = this.programs.simple;
             gl.uniformMatrix4fv(program.uniforms.uViewMatrix, false, mvpMatrix);
-            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.matrix);
+            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
 
             for (const primitive of node.mesh.primitives) {
                 this.renderPrimitive(primitive);
