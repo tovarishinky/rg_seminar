@@ -14,6 +14,7 @@ export class Player extends Node {
         this.mvAcc = 15; // set move acceleration 
         this.acceleration = 5; // set acceleration
         this.maxSpeed = this.walkSpeed;
+        this.rotationE = [0, 0, 0];
 
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
         this.keydownHandler = this.keydownHandler.bind(this);
@@ -79,10 +80,11 @@ export class Player extends Node {
 
     update(dt) {
         const c = this;
+        
 
-        const forward = vec3.set(vec3.create(), -Math.sin(c.rotation[1]) * this.mvAcc, 0, -Math.cos(c.rotation[1]) * this.mvAcc);
+        const forward = vec3.set(vec3.create(), -Math.sin(c.rotationE[1]) * this.mvAcc, 0, -Math.cos(c.rotationE[1]) * this.mvAcc);
         const right = vec3.set(vec3.create(),
-            Math.cos(c.rotation[1]) * this.mvAcc, 0, -Math.sin(c.rotation[1]) * this.mvAcc);
+            Math.cos(c.rotationE[1]) * this.mvAcc, 0, -Math.sin(c.rotationE[1]) * this.mvAcc);
         const up = vec3.set(vec3.create(), 0, c.jumpHeight, 0); // set jump height
         const down = vec3.set(vec3.create(), 0, c.gravity, 0);
 
@@ -191,6 +193,11 @@ export class Player extends Node {
         if (this.translation[1] < -30) {
             this.translation = vec3.fromValues(0, 5, 0);
         }
+
+        // update Rotation
+        const degrees = this.rotationE.map(x => x * 180 / Math.PI);
+        this.rotation = quat.fromEuler(quat.create(), ...degrees);
+        //console.log(this.rotation);
     }
 
     enableCam() {
@@ -214,35 +221,33 @@ export class Player extends Node {
         const dx = e.movementX * p.mouseSensitivity;
         const dy = e.movementY * p.mouseSensitivity;
 
-        p.rotation[0] -= dy;
-        p.rotation[1] -= dx;
+        p.rotationE[0] -= dy;
+        p.rotationE[1] -= dx;
         //c.player.rotation[0] += dy * c.mouseSensitivity;  // dont turn player (unturn) if you look up, only about Y
 
         const pi = Math.PI;
         const twopi = pi * 2;
         const halfpi = pi / 2;
-        if (p.rotation[0] > halfpi) {
-            p.rotation[0] = halfpi;
+        if (p.rotationE[0] > halfpi) {
+            p.rotationE[0] = halfpi;
         }
-        if (p.rotation[0] < -halfpi) {
-            p.rotation[0] = -halfpi;
+        if (p.rotationE[0] < -halfpi) {
+            p.rotationE[0] = -halfpi;
         }
 
-        p.rotation[1] = ((p.rotation[1] % twopi) + twopi) % twopi;
+        p.rotationE[1] = ((p.rotationE[1] % twopi) + twopi) % twopi;
     }
 
     updateMatrix() {
-        const degrees = this.rotation.map(x => x * 180 / Math.PI);
+        const degrees = this.rotationE.map(x => x * 180 / Math.PI);
         const q = quat.fromEuler(quat.create(), ...degrees);
         mat4.fromRotationTranslationScale(
             this.matrix,
-            q,
+            this.rotation,
             this.translation,
             this.scale);
         // ROKA
-        const ro = this.children[0];
-        ro.rotation = vec4.clone(q);
-        ro.updateMatrix();
+        
     }
 
     keydownHandler(e) {
