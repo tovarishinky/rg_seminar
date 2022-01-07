@@ -1,4 +1,4 @@
-import { mat4, quat, vec3 } from "../../lib/gl-matrix-module.js";
+import { mat4, quat, vec3, vec4 } from "../../lib/gl-matrix-module.js";
 import { Node } from "./Node.js";
 
 export class Player extends Node {
@@ -22,8 +22,8 @@ export class Player extends Node {
         this.falling = false;
         this.waitForJump = false;
         this.sprint = false;
-        this.player = null;
 
+        this.action = false;
         this.crouching = false;
         this.standUp = false;
         this.autoJump = false;
@@ -51,10 +51,11 @@ export class Player extends Node {
 
     initHand() {
         const hand = new Node({
-            'translation': vec3.fromValues(0.5, -0.5, -1),
+            'translation': vec3.fromValues(0.5, -0.5, -0.5),
             'name': 'Hand'
         })
         this.addChild(hand);
+        this.roka = hand;
     }
 
     plantFeet() {
@@ -70,10 +71,6 @@ export class Player extends Node {
                 this.collisionMax[2] - 0.2
             ]
         };
-    }
-
-    getPlayer() {
-        this.player = this.children[0];
     }
 
     updateProjection() {
@@ -111,6 +108,12 @@ export class Player extends Node {
             this.sprint = false;
             c.maxSpeed = c.walkSpeed;
         }
+        if (this.keys['KeyE']) {
+            this.action = true;
+        } else {
+            this.action = false;
+        }
+
         /* Crouching 
         Zmanjsa collision box za 1 enoto (trenutno je player visok 2 - 1.8 do kamere + 0.2 nad kamero, torej si v crouch visok 1 enoto)
         Pri pocepu na dol, pades na tla zaradi gravitacije, pri pocepu na gor, pa te funkcija transformira, da ne pride do clippanja
@@ -118,7 +121,7 @@ export class Player extends Node {
         Pri skoku na ploscad, si lahko pomagas s crouchom, tako kot bi zares skocil, in dvignil noge da visje platforme (crouch omogoca skok na visje ploscadi)
         */
 
-        if (this.keys['ControlLeft'] || this.keys['KeyC']) {
+        if (this.keys['KeyC']) {
             if (!this.crouching) {
                 this.collisionMin[1] = -this.crouchHeight;
                 this.plantFeet();
@@ -236,6 +239,10 @@ export class Player extends Node {
             q,
             this.translation,
             this.scale);
+        // ROKA
+        const ro = this.children[0];
+        ro.rotation = vec4.clone(q);
+        ro.updateMatrix();
     }
 
     keydownHandler(e) {

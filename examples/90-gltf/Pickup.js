@@ -7,6 +7,6 @@ export class Pickup extends Node {
     }
 
     update(dt) {
-        quat.rotateX(this.rotation, this.rotation, 2 * dt);
+        quat.rotateZ(this.rotation, this.rotation, 2 * dt);
     }
 }

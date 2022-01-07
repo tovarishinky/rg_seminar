@@ -5,7 +5,7 @@ export class Drop extends Node {
     constructor(options = {}) {
         super(options);
         this.startPos = vec3.clone(this.translation);
-        this.velocity = vec3.fromValues(0, -10, 0);
+        this.velocity = vec3.fromValues(0, -9, 0);
     }
 
     update() {
