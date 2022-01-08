@@ -12,6 +12,7 @@ uniform float uUseFakeLights;
 out vec3 vVertexPosition;
 out vec3 vNormal;
 out vec2 vTexCoord;
+out mat4 modelMat;
 
 void main() {
 
@@ -20,6 +21,7 @@ void main() {
     if(uUseFakeLights>0.5){
         vNormal=vec3(0.0,1.0,0.0);
     }
+    modelMat=uModelMatrix;
     vTexCoord = aTexCoord;
     gl_Position = uProjection * uViewMatrix * aPosition;
 }
@@ -46,7 +48,7 @@ uniform vec3 uLightAttenuation;
 in vec3 vVertexPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
-
+in mat4 modelMat;
 
 out vec4 oColor;
 
@@ -56,7 +58,7 @@ void main() {
         float d = distance(vVertexPosition, lightPosition);
         float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
             
-        vec3 N = vec4(vNormal, 0).xyz;
+        vec3 N = (vec4(vNormal, 0)).xyz;
         vec3 L = normalize(lightPosition - vVertexPosition);
         vec3 E = normalize(-vVertexPosition);
         vec3 R = normalize(reflect(-L, N));

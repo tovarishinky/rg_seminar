@@ -20,7 +20,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/map1_test/map1_test.gltf');
+        await this.loader.load('../../common/models/map2_test/map2_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -39,6 +39,7 @@ class App extends Application {
         this.lights[1].color = [248, 141, 51];
         this.lights[2].color = [248, 141, 51];
         this.lights[3].color = [248, 141, 51];
+        this.flame();
 
         this.physics = new Physics(this.collisionScene, this.scene, this);
 
@@ -140,7 +141,21 @@ class App extends Application {
         }
     }
 
+    async flame(){
+        let flameColor=[245,154,80];
+        for (let i = 0; i < this.lights.length; i++) {
+            this.lights[i].diffuse=1.5+Math.random()*0.1;
+            this.lights[i].color=[flameColor[0]+Math.random()*20,flameColor[1]+Math.random()*10,flameColor[2]+Math.random()*10];
+        }
+        setTimeout(() => {this.flame();},20+Math.random()*120);
+
+    }
+
 }
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
