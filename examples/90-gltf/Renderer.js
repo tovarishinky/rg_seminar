@@ -195,15 +195,28 @@ export class Renderer {
         gl.useProgram(program.program);
         gl.uniform1i(program.uniforms.uTexture, 0);
         gl.uniformMatrix4fv(program.uniforms.uProjection, false, player.camera.matrix);
-        gl.uniform1f(program.uniforms.uAmbient, lights[0].ambient);
-        gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
-        gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
-        gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
-        const lightCords= vec3.create();
+
+        const lightCords = vec3.create();
         mat4.getTranslation(lightCords, player.children[0].getGlobalTransform());
         lights[0].translation = lightCords;
         lights[0].rotation = player.rotation;
         lights[0].updateMatrix();
+
+        this.setLightsUniforms(gl, program, lights, player);
+
+        const viewMatrix = player.matrix;
+        mat4.invert(viewMatrix,viewMatrix);
+        for (const node of scene.nodes) {
+            this.renderNode(node, viewMatrix,lights,program);
+        }
+        this.renderHand(lights[0],viewMatrix);
+    }
+
+    setLightsUniforms(gl, program, lights, player) {
+        gl.uniform1f(program.uniforms.uAmbient, lights[0].ambient);
+        gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
+        gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
+        gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
         for (let i = 0; i < lights.length; i++) {
             gl.uniform3fv(program.uniforms['uLightPosition[' + i + ']'], lights[i].translation);
         }
@@ -216,22 +229,27 @@ export class Renderer {
 
         gl.uniform3fv(program.uniforms.uLightAttenuation, lights[0].attenuatuion);
         gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, lights[0].getGlobalTransform());
-
-        const viewMatrix = player.matrix;
-        mat4.invert(viewMatrix,viewMatrix);
-        for (const node of scene.nodes) {
-            this.renderNode(node, viewMatrix,lights[0]);
-        }
-        this.renderHand(lights[0],viewMatrix);
     }
 
-    renderNode(node, mvpMatrix,light) {
+    renderNode(node, mvpMatrix,lights,program) {
         const gl = this.gl;
         if(node.name=="Light1") {
             return;
         }
-        else {
-            gl.enable(gl.DEPTH_TEST);
+        if(node.name.startsWith('Drop')){
+            for (let i = 0; i < lights.length; i++) {
+                let color = vec3.clone([150,150,255]);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
+            }
+            gl.uniform1f(program.uniforms.uDiffuse, 0.3);//osvetljenost kapljic
+            gl.uniform1f(program.uniforms.uSpecular, 1);//svetlost odboja na kapljici
+        }else{
+            for (let i = 0; i < lights.length; i++) {
+                let color = vec3.clone(lights[i].color);
+                vec3.scale(color, color, 1.0 / 255.0);
+                gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
+            }
         }
         mvpMatrix = mat4.clone(mvpMatrix);
         mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
