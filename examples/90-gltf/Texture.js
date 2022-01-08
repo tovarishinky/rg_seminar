@@ -6,6 +6,8 @@ export class Texture {
         this.image = options.image || null;
         this.sampler = options.sampler || new Sampler();
         this.hasMipmaps = false;
+        this.hasTransparency = false;
+        this.useFakeLights=false;
     }
 
 }

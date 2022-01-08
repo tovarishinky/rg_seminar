@@ -7,14 +7,19 @@ layout (location = 2) in vec3 aNormal;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjection;
 uniform mat4 uModelMatrix;
+uniform float uUseFakeLights;
 
 out vec3 vVertexPosition;
 out vec3 vNormal;
 out vec2 vTexCoord;
 
 void main() {
+
     vVertexPosition = (uModelMatrix*aPosition).xyz;
     vNormal = aNormal;
+    if(uUseFakeLights>0.5){
+        vNormal=vec3(0.0,1.0,0.0);
+    }
     vTexCoord = aTexCoord;
     gl_Position = uProjection * uViewMatrix * aPosition;
 }
@@ -37,9 +42,11 @@ uniform float uShininess;
 uniform vec3 uLightColor[4];
 uniform vec3 uLightPosition[4];
 uniform vec3 uLightAttenuation;
+
 in vec3 vVertexPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
+
 
 out vec4 oColor;
 
@@ -62,6 +69,11 @@ void main() {
         float specular = uSpecular * phong;
         
         vec3 diffuseLight = vec3(245,150,49)*specular; //specular color
+        
+        vec4 textureColour = texture(uTexture, vTexCoord);
+        if(textureColour.a<0.5){
+            discard;
+        }
         
         vec3 Light = ((ambient + diffuse) * attenuation) * uLightColor[i]+(diffuseLight * 0.01)* attenuation;
         oColor += texture(uTexture, vTexCoord) * vec4(Light, 1);

@@ -164,52 +164,41 @@ export class Renderer {
         }
     }
 
-    getViewProjectionMatrix(player) {
-        const mvpMatrix = mat4.clone(player.matrix);
-        let parent = player.parent;
-        while (parent) {
-            mat4.mul(mvpMatrix, parent.matrix, mvpMatrix);
-            parent = parent.parent;
-        }
-        mat4.invert(mvpMatrix, mvpMatrix);
-        mat4.mul(mvpMatrix, player.camera.matrix, mvpMatrix);
-        return mvpMatrix;
-    }
-    getViewMatrix(player) {
-        const mvpMatrix = mat4.clone(player.matrix);
-        let parent = player.parent;
-        while (parent) {
-            mat4.mul(mvpMatrix, parent.matrix, mvpMatrix);
-            parent = parent.parent;
-        }
-        mat4.invert(mvpMatrix, mvpMatrix);
-        return mvpMatrix;
-    }
-
     render(scene, player, lights) {
         const gl = this.gl;
-
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
         const program = this.programs.simple;
         gl.useProgram(program.program);
+
+        this.connectHandAndLight(player, lights);
+        this.setUniforms(gl, program, player, lights);
+        const viewMatrix = this.getViewMatrix(player);
+
+        for (const node of scene.nodes) {
+            this.renderNode(node, viewMatrix,lights,program);
+        }
+
+        this.renderHand(lights[0],viewMatrix);
+    }
+
+    setUniforms(gl, program, player, lights) {
         gl.uniform1i(program.uniforms.uTexture, 0);
         gl.uniformMatrix4fv(program.uniforms.uProjection, false, player.camera.matrix);
+        this.setLightsUniforms(gl, program, lights, player);
+    }
 
+    getViewMatrix(player) {
+        const viewMatrix = player.getGlobalTransform();
+        mat4.invert(viewMatrix, viewMatrix);
+        return viewMatrix;
+    }
+
+    connectHandAndLight(player, lights) {
         const lightCords = vec3.create();
         mat4.getTranslation(lightCords, player.children[0].getGlobalTransform());
         lights[0].translation = lightCords;
         lights[0].rotation = player.rotation;
         lights[0].updateMatrix();
-
-        this.setLightsUniforms(gl, program, lights, player);
-
-        const viewMatrix = player.matrix;
-        mat4.invert(viewMatrix,viewMatrix);
-        for (const node of scene.nodes) {
-            this.renderNode(node, viewMatrix,lights,program);
-        }
-        this.renderHand(lights[0],viewMatrix);
     }
 
     setLightsUniforms(gl, program, lights, player) {
@@ -237,13 +226,7 @@ export class Renderer {
             return;
         }
         if(node.name.startsWith('Drop')){
-            for (let i = 0; i < lights.length; i++) {
-                let color = vec3.clone([150,150,255]);
-                vec3.scale(color, color, 1.0 / 255.0);
-                gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
-            }
-            gl.uniform1f(program.uniforms.uDiffuse, 0.3);//osvetljenost kapljic
-            gl.uniform1f(program.uniforms.uSpecular, 1);//svetlost odboja na kapljici
+            this.setWaterLightUniforms(lights, gl, program);
         }else{
             for (let i = 0; i < lights.length; i++) {
                 let color = vec3.clone(lights[i].color);
@@ -259,16 +242,34 @@ export class Renderer {
             gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
 
             for (const primitive of node.mesh.primitives) {
-                this.renderPrimitive(primitive);
+                this.renderPrimitive(primitive,program);
             }
         }
 
         for (const child of node.children) {
-            this.renderNode(child, mvpMatrix);
+            this.renderNode(child, mvpMatrix,program);
         }
     }
 
-    renderHand(node, mvpMatrix,light) {
+    setWaterLightUniforms(lights, gl, program) {
+        for (let i = 0; i < lights.length; i++) {
+            let color = vec3.clone([150, 150, 255]);
+            vec3.scale(color, color, 1.0 / 255.0);
+            gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
+        }
+        gl.uniform1f(program.uniforms.uDiffuse, 0.3);//osvetljenost kapljic
+        gl.uniform1f(program.uniforms.uSpecular, 1);//svetlost odboja na kapljici
+    }
+
+    enableCulling(gl){
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK);
+    }
+    disableCulling(gl){
+        gl.disable(gl.CULL_FACE);
+    }
+
+    renderHand(node, mvpMatrix,program) {
         const gl = this.gl;
         gl.clear(gl.DEPTH_BUFFER_BIT);
         mvpMatrix = mat4.clone(mvpMatrix);
@@ -279,16 +280,16 @@ export class Renderer {
             gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
 
             for (const primitive of node.mesh.primitives) {
-                this.renderPrimitive(primitive);
+                this.renderPrimitive(primitive,program);
             }
         }
 
         for (const child of node.children) {
-            this.renderNode(child, mvpMatrix);
+            this.renderHand(child, mvpMatrix,program);
         }
     }
 
-    renderPrimitive(primitive) {
+    renderPrimitive(primitive,program) {
         const gl = this.gl;
 
         const vao = this.glObjects.get(primitive);
@@ -296,6 +297,13 @@ export class Renderer {
         const texture = material.baseColorTexture;
         const glTexture = this.glObjects.get(texture.image);
         const glSampler = this.glObjects.get(texture.sampler);
+
+        if(texture.hasTransparency){
+            this.disableCulling(gl);
+            gl.uniform1f(program.uniforms.uUseFakeLights, false, texture.useFakeLights);
+        }else{
+            this.enableCulling(gl);
+        }
 
         gl.bindVertexArray(vao);
         gl.activeTexture(gl.TEXTURE0);
