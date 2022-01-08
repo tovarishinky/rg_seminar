@@ -1,16 +1,17 @@
-import { vec3, mat4 } from '../../lib/gl-matrix-module.js';
+import { vec3, mat4, quat } from '../../lib/gl-matrix-module.js';
 import { BlockMover } from './BlockMover.js';
 import { Pickup } from './Pickup.js';
 
 export class Physics {
 
-    constructor(scene, renderScene) {
+    constructor(scene, renderScene, app) {
         this.scene = scene;
         this.renderScene = renderScene;
         this.falling = false;
         this.bm = new BlockMover(renderScene, scene);
         this.mObjects = [];
         this.doorMoving = false;
+        this.app = app;
     }
 
     update(dt, player) {
@@ -93,7 +94,7 @@ export class Physics {
             return;
         }
 
-        if (b.name.startsWith("aabb_Coin")) {
+        if (b.name.startsWith("aabb_Coin") || b.name.startsWith("aabb_FakeFloor")) {
             this.pickup(b);
         }
         else if (b.name.startsWith("aabb_ButtonTrigger")) {
@@ -104,6 +105,12 @@ export class Physics {
                     this.doorMoving = true;
                 }
             }
+        }
+        else if (b.name.startsWith("aabb_ExitTrigger")) {
+            console.log("EXIT");
+        }
+        else if (b.name.startsWith("aabb_DeathFloor")) {
+            a.translation = vec3.clone(vec3.fromValues(0, 5, 0));
         }
          else {
             if (isCollidingFeet) {
@@ -147,8 +154,12 @@ export class Physics {
 
     pickup(nod) {
         const name1 = nod.name.replace("aabb_Coin", "");
+        const fakeFloor = nod.name.replace("aabb_FakeFloor", "");
         this.renderScene.traverse(node => {
             if (node.name.startsWith("Coin") && node.name.replace("Coin", "") == name1) {
+                node.mesh = null;
+            }
+            if (node.name.startsWith("FakeFloor") && node.name.replace("FakeFloor", "") == fakeFloor) {
                 node.mesh = null;
             }
         });

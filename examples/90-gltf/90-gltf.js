@@ -12,6 +12,7 @@ import { Light } from "../90-gltf/Light.js";
 import { BlockMover } from './BlockMover.js';
 import { ParticleMover } from './ParticleMover.js';
 import { PickupMover } from './PickupMover.js';
+import { TrapMover } from './trapMover.js';
 
 
 class App extends Application {
@@ -19,7 +20,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/map1_test/map1_test.gltf');
+        await this.loader.load('../../common/models/map2_test/map2_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -28,7 +29,9 @@ class App extends Application {
         this.player = new Player();
         this.player.camera = new PerspectiveCamera({ node: this.player });
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(0, 6, -53);
+        this.player.translation = vec3.fromValues(0, 5, 0);
+
+        this.trapMover = new TrapMover(this.scene, this.collisionScene);
 
         this.lights = this.scene.getLights();
         this.light = this.lights[0];
@@ -37,7 +40,7 @@ class App extends Application {
         this.lights[2].color = [248, 141, 51];
         this.lights[3].color = [248, 141, 51];
 
-        this.physics = new Physics(this.collisionScene, this.scene);
+        this.physics = new Physics(this.collisionScene, this.scene, this);
 
         this.renderer = new Renderer(this.gl);
         this.renderer.prepareScene(this.scene);
@@ -58,18 +61,10 @@ class App extends Application {
         this.pickupM = new PickupMover(this.scene);
     }
 
+
     updateCollisionParams() {
         this.collisionScene.traverse(node => {
-            /*
-            let mb = node.mesh.primitives[0].attributes.POSITION.min;
-            let mbb = node.mesh.primitives[0].attributes.POSITION.max;
 
-            vec3.transformMat4(mb, mb, b.matrix);
-            vec3.transformMat4(mbb, mbb, b.matrix);
-
-            node.mesh.primitives[0].attributes.POSITION.min = mb;
-            node.mesh.primitives[0].attributes.POSITION.max = mbb;
-            */
             let mb = node.mesh.primitives[0].attributes.POSITION.min;
             let mbb = node.mesh.primitives[0].attributes.POSITION.max;
 
@@ -111,6 +106,10 @@ class App extends Application {
         }
         if (this.pickupM) {
             this.pickupM.update(dt);
+        }
+
+        if (this.trapMover) {
+            this.trapMover.update(dt);
         }
     }
 
