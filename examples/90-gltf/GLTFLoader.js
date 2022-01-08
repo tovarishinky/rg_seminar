@@ -19,7 +19,6 @@ import { Pickup } from './Pickup.js';
 // the resources in series (care to optimize?).
 
 export class GLTFLoader {
-
     constructor() {
         this.gltf = null;
         this.gltfUrl = null;
@@ -157,12 +156,23 @@ export class GLTFLoader {
         let options = {};
         if (gltfSpec.source !== undefined) {
             options.image = await this.loadImage(gltfSpec.source);
+            console.log(options.image.src);
         }
+
         if (gltfSpec.sampler !== undefined) {
             options.sampler = await this.loadSampler(gltfSpec.sampler);
         }
 
         const texture = new Texture(options);
+        let transTextures = ["Flame","Vines"]
+        for (let i = 0; i < transTextures.length; i++) {
+            let result = options.image.src.substring(46);
+            if(result.startsWith(result)) {
+                texture.hasTransparency = true;
+                texture.useFakeLights=true;
+            }
+        }
+
         this.cache.set(gltfSpec, texture);
         return texture;
     }

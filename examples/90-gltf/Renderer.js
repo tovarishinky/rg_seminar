@@ -242,12 +242,12 @@ export class Renderer {
             gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
 
             for (const primitive of node.mesh.primitives) {
-                this.renderPrimitive(primitive);
+                this.renderPrimitive(primitive,program);
             }
         }
 
         for (const child of node.children) {
-            this.renderNode(child, mvpMatrix);
+            this.renderNode(child, mvpMatrix,program);
         }
     }
 
@@ -261,7 +261,15 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uSpecular, 1);//svetlost odboja na kapljici
     }
 
-    renderHand(node, mvpMatrix,light) {
+    enableCulling(gl){
+        gl.enable(gl.CULL_FACE);
+        gl.cullFace(gl.BACK);
+    }
+    disableCulling(gl){
+        gl.disable(gl.CULL_FACE);
+    }
+
+    renderHand(node, mvpMatrix,program) {
         const gl = this.gl;
         gl.clear(gl.DEPTH_BUFFER_BIT);
         mvpMatrix = mat4.clone(mvpMatrix);
@@ -272,16 +280,16 @@ export class Renderer {
             gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
 
             for (const primitive of node.mesh.primitives) {
-                this.renderPrimitive(primitive);
+                this.renderPrimitive(primitive,program);
             }
         }
 
         for (const child of node.children) {
-            this.renderNode(child, mvpMatrix);
+            this.renderHand(child, mvpMatrix,program);
         }
     }
 
-    renderPrimitive(primitive) {
+    renderPrimitive(primitive,program) {
         const gl = this.gl;
 
         const vao = this.glObjects.get(primitive);
@@ -289,6 +297,13 @@ export class Renderer {
         const texture = material.baseColorTexture;
         const glTexture = this.glObjects.get(texture.image);
         const glSampler = this.glObjects.get(texture.sampler);
+
+        if(texture.hasTransparency){
+            this.disableCulling(gl);
+            gl.uniform1f(program.uniforms.uUseFakeLights, false, texture.useFakeLights);
+        }else{
+            this.enableCulling(gl);
+        }
 
         gl.bindVertexArray(vao);
         gl.activeTexture(gl.TEXTURE0);
