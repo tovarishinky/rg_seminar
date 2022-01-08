@@ -8,7 +8,7 @@ import { Player } from './Player.js';
 import { Renderer } from './Renderer.js';
 import { GUI } from '../../lib/dat.gui.module.js';
 import { Physics } from './Physics.js';
-import {Light} from "../90-gltf/Light.js";
+import { Light } from "../90-gltf/Light.js";
 import { BlockMover } from './BlockMover.js';
 import { ParticleMover } from './ParticleMover.js';
 import { PickupMover } from './PickupMover.js';
@@ -17,7 +17,7 @@ import { PickupMover } from './PickupMover.js';
 class App extends Application {
 
     async start() {
-        this.gameSpeed = 1      * 0.001; // set gamespeed with first number
+        this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/map1_test/map1_test.gltf');
 
@@ -26,16 +26,16 @@ class App extends Application {
         this.collisionScene = await scenes[1];
 
         this.player = new Player();
-        this.player.camera = new PerspectiveCamera({node: this.player});
+        this.player.camera = new PerspectiveCamera({ node: this.player });
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(0, 5, 0);
+        this.player.translation = vec3.fromValues(0, 6, -53);
 
         this.lights = this.scene.getLights();
         this.light = this.lights[0];
-        this.lights[0].color=[248,141,51];
-        this.lights[1].color=[248,141,51];
-        this.lights[2].color=[248,141,51];
-        this.lights[3].color=[248,141,51];
+        this.lights[0].color = [248, 141, 51];
+        this.lights[1].color = [248, 141, 51];
+        this.lights[2].color = [248, 141, 51];
+        this.lights[3].color = [248, 141, 51];
 
         this.physics = new Physics(this.collisionScene, this.scene);
 
@@ -47,13 +47,13 @@ class App extends Application {
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
 
         this.updateCollisionParams();
-        //console.log(this.scene);
-        //console.log(this.collisionScene);
-
-        // block Mover
-        this.bm = new BlockMover(this.scene, this.collisionScene);
         console.log(this.scene);
         console.log(this.collisionScene);
+
+        // block Mover
+
+        //console.log(this.scene);
+        //console.log(this.collisionScene);
         this.pm = new ParticleMover(this.scene);
         this.pickupM = new PickupMover(this.scene);
     }
@@ -90,14 +90,14 @@ class App extends Application {
         const dt = (this.time - this.startTime) * this.gameSpeed;
         this.startTime = this.time;
 
-        if(this.player) {
+        if (this.player) {
             this.player.update(dt);
         }
 
         if (this.physics && this.player) {
             this.physics.update(dt, this.player);
         }
-        if(this.lights) {
+        if (this.lights) {
             for (let i = 0; i < this.lights.length; i++) {
                 this.lights[i].updateMatrix();
             }
@@ -148,7 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new App(canvas);
     const gui = new GUI();
     gui.add(app, 'enableCamera');
-    setTimeout(() => {gui.add(app.light, 'ambient', 0.0, 1.0);
+    setTimeout(() => {
+        gui.add(app.light, 'ambient', 0.0, 1.0);
         gui.add(app.light, 'diffuse', 0.0, 10.0);
         gui.add(app.light, 'specular', 0.0, 1.0);
         gui.add(app.light, 'shininess', 0.0, 1000.0);

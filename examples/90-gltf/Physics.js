@@ -1,4 +1,5 @@
 import { vec3, mat4 } from '../../lib/gl-matrix-module.js';
+import { BlockMover } from './BlockMover.js';
 import { Pickup } from './Pickup.js';
 
 export class Physics {
@@ -7,6 +8,9 @@ export class Physics {
         this.scene = scene;
         this.renderScene = renderScene;
         this.falling = false;
+        this.bm = new BlockMover(renderScene, scene);
+        this.mObjects = [];
+        this.doorMoving = false;
     }
 
     update(dt, player) {
@@ -15,10 +19,17 @@ export class Physics {
         player.updateMatrix();
         this.scene.traverse(node => {
             if (node.mesh && player.velocity && player.feet) {
-                this.resolveCollision(player, node);
+                this.resolveCollision(player, node, dt);
             }
         });
         this.updateFalling(player);
+        this.moveObjects(dt);
+    }
+
+    moveObjects(dt) {
+        for (const o of this.mObjects) {
+            this.bm.Move(o.mesh, o.coll, dt);
+        }
     }
 
     updateFalling(player) {
@@ -35,7 +46,7 @@ export class Physics {
             this.intervalIntersection(aabb1.min[2], aabb1.max[2], aabb2.min[2], aabb2.max[2]);
     }
 
-    resolveCollision(a, b) {
+    resolveCollision(a, b, dt) {
         // Update bounding boxes with global translation.
         const ta = a.getGlobalTransform();
         const tb = b.getGlobalTransform();
@@ -86,7 +97,11 @@ export class Physics {
             this.pickup(b);
         }
         else if (a.action && b.name.startsWith("aabb_ButtonTrigger")) {
-            console.log('Press!');
+            if (!this.doorMoving) {
+                console.log('Pressed!');
+                this.pressButton();
+                this.doorMoving = true;
+            }
         }
          else {
             // Move node A minimally to avoid collision.
@@ -135,9 +150,23 @@ export class Physics {
     }
 
     pressButton() {
+        let mesh;
+        let coll;
         this.renderScene.traverse(node => {
-            if (node.name.startsWith("")) {}
+            if (node.name.startsWith("Door")) {
+                mesh = node;
+            }
         });
+        this.scene.traverse(node => {
+            if (node.name.startsWith("aabb_Door")) {
+                coll = node;
+            }
+        });
+
+        if (mesh && coll) {
+            this.mObjects.push({'mesh': mesh, 'coll': coll});
+        }
+
     }
 
 }

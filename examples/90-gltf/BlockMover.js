@@ -39,5 +39,15 @@ export class BlockMover {
         }
     }
 
+    Move(block, collision, dt) {
+        if (block.translation[1] > 15) {
+            return;
+        }
+        vec3.add(block.translation, block.translation, vec3.fromValues(0,1 * dt,0));
+        vec3.add(collision.translation, collision.translation, vec3.fromValues(0,1 * dt,0));
+        block.updateMatrix();
+        collision.updateMatrix();
+    }
+
     
 }
