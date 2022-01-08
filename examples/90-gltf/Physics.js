@@ -85,9 +85,9 @@ export class Physics {
         });
 
         // set falling
-        if (isCollidingFeet) {
-            this.falling = false;
-        }
+        // if (isCollidingFeet) {
+        //     this.falling = false;
+        // }
 
         if (!isColliding) {
             return;
@@ -96,14 +96,19 @@ export class Physics {
         if (b.name.startsWith("aabb_Coin")) {
             this.pickup(b);
         }
-        else if (a.action && b.name.startsWith("aabb_ButtonTrigger")) {
-            if (!this.doorMoving) {
-                console.log('Pressed!');
-                this.pressButton();
-                this.doorMoving = true;
+        else if (b.name.startsWith("aabb_ButtonTrigger")) {
+            if (a.action) {
+                if (!this.doorMoving) {
+                    console.log('Pressed!');
+                    this.pressButton();
+                    this.doorMoving = true;
+                }
             }
         }
          else {
+            if (isCollidingFeet) {
+                this.falling = false;
+            }
             // Move node A minimally to avoid collision.
             const diffa = vec3.sub(vec3.create(), maxb, mina);
             const diffb = vec3.sub(vec3.create(), maxa, minb);
