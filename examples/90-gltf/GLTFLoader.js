@@ -165,11 +165,17 @@ export class GLTFLoader {
 
         const texture = new Texture(options);
         let transTextures = ["Flame","Vines"]
+        let normTextures = ["Flame","Vines"];
         for (let i = 0; i < transTextures.length; i++) {
             let result = options.image.src.substring(46);
-            if(result.startsWith(result)) {
+            if(result.startsWith(transTextures[i])) {
                 texture.hasTransparency = true;
-                texture.useFakeLights=true;
+            }
+        }
+        for (let i = 0; i < normTextures.length; i++) {
+            let result = options.image.src.substring(46);
+            if(result.startsWith(normTextures[i])) {
+                texture.useFakeLights=1;
             }
         }
 
