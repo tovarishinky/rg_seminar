@@ -10,8 +10,10 @@ export class Physics {
         this.falling = false;
         this.bm = new BlockMover(renderScene, scene);
         this.mObjects = [];
+        this.m2 = [];
         this.doorMoving = false;
         this.app = app;
+        this.loadingNewLevel = false;
     }
 
     update(dt, player) {
@@ -20,7 +22,7 @@ export class Physics {
         player.updateMatrix();
         this.scene.traverse(node => {
             if (node.mesh && player.velocity && player.feet) {
-                this.resolveCollision(player, node, dt);
+                this.resolveCollision(player, node);
             }
         });
         this.updateFalling(player);
@@ -29,7 +31,10 @@ export class Physics {
 
     moveObjects(dt) {
         for (const o of this.mObjects) {
-            this.bm.Move(o.mesh, o.coll, dt);
+            this.bm.MoveDoor(o.mesh, o.coll, dt, vec3.fromValues(0,1 * dt,0));
+        }
+        for (const o of this.m2) {
+            //this.bm.Move(o.mesh, o.coll, dt, vec3.fromValues(0,1 * dt,0));
         }
     }
 
@@ -47,7 +52,7 @@ export class Physics {
             this.intervalIntersection(aabb1.min[2], aabb1.max[2], aabb2.min[2], aabb2.max[2]);
     }
 
-    resolveCollision(a, b, dt) {
+    resolveCollision(a, b) {
         // Update bounding boxes with global translation.
         const ta = a.getGlobalTransform();
         const tb = b.getGlobalTransform();
@@ -106,11 +111,13 @@ export class Physics {
                 }
             }
         }
-        else if (b.name.startsWith("aabb_ExitTrigger")) {
+        else if (b.name.startsWith("aabb_ExitTrigger") && !this.loadingNewLevel) {
             console.log("EXIT");
+            this.loadingNewLevel = true;
+            this.app.newLvl();
         }
         else if (b.name.startsWith("aabb_DeathFloor")) {
-            a.translation = vec3.clone(vec3.fromValues(0, 5, 0));
+            a.die();
         }
          else {
             if (isCollidingFeet) {
