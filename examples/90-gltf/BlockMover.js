@@ -39,10 +39,17 @@ export class BlockMover {
         }
     }
 
-    MoveDoor(block, collision, dt, tr) {
-        if (block.translation[1] > 15) {
-            return;
+    MoveDoor(block, collision, dt, tr, num) {
+        if (num == 1) {
+            if (block.translation[1] > 15) {
+                return;
+            }
+        } else if (num == 2) {
+            if (block.translation[1] < -8) {
+                return;
+            }
         }
+        
         vec3.add(block.translation, block.translation, tr);
         vec3.add(collision.translation, collision.translation, tr);
         block.updateMatrix();

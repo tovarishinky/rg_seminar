@@ -203,7 +203,7 @@ export class Player extends Node {
         
         // smrt
 
-        if (this.translation[1] < -10) {
+        if (this.translation[1] < -30) {
             this.die();
         }
     }
