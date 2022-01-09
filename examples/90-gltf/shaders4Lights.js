@@ -53,7 +53,7 @@ uniform vec3 uLightPosition[4];
 uniform vec3 uLightAttenuation;
 uniform float uIsParticle;
 uniform float lampa;
-
+uniform float ambientHand;
 in vec3 vVertexPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
@@ -85,6 +85,10 @@ void main() {
         if(lampa>0.5){
             specular=0.0;
             ambient=2.0;
+        }
+        if(lampa>0.5&&i==0){
+            specular=0.0;
+            ambient=ambientHand;
         }
         
         vec3 diffuseLight = vec3(245,150,49)*specular; //specular color

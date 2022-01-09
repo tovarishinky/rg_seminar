@@ -117,6 +117,7 @@ export class Player extends Node {
         }
 
         if (this.keys['KeyF']) {
+            console.log("presed");
             this.app.incrLight(dt);
         }
         if (this.keys['KeyG']) {
