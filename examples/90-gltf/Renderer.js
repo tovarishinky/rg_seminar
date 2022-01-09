@@ -226,14 +226,7 @@ export class Renderer {
         if(node.name.startsWith('Drop')){
             this.setWaterLightUniforms(lights, gl, program);
         }else{
-            gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
-            gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
-            for (let i = 0; i < lights.length; i++) {
-                let color = vec3.clone(lights[i].color);
-                vec3.scale(color, color, 1.0 / 255.0);
-                gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
-            }
-
+            this.setLightsUniforms(gl, program, lights);
         }
         mvpMatrix = mat4.clone(mvpMatrix);
         // mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
