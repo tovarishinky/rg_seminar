@@ -146,8 +146,8 @@ class App extends Application {
         let flameColor=[245,154,80];
         // r,g,b so za koliko se random spreminjajo barve rgb
         let r=40;
-        let g=20;
-        let b=20;
+        let g=10;
+        let b=10;
         //za koliko se spreminja svetlost
         let sprememba_svetlosti=0.2;
         //stalna svetlost
@@ -157,9 +157,9 @@ class App extends Application {
             this.lights[i].color=[flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];
         }
         //zakasnitev
-        let time=20
+        let time=30
         //za koliko lahko čas naraste
-        let time_change=120
+        let time_change=150
         setTimeout(() => {this.flame();},time+Math.random()*time_change);
 
     }
