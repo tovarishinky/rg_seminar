@@ -154,7 +154,7 @@ export class TrapMover {
         this.r1End += r1move;
 
         // R3
-        if (this.r3End > 9) {
+        if (this.r3End > 6) {
             this.r3F = false;
         } else if (this.r3End < 2) { // end
             this.r3F = true;
