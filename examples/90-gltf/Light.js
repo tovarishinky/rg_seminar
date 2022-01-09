@@ -15,7 +15,8 @@ export class Light extends Node {
             specular         : 0.4,
             shininess        : 6,
             color            : [255, 255, 255],
-            attenuatuion     : [1.0, 0, 0.09]
+            attenuatuion     : [1.0, 0, 0.09],
+            ambientHand      : 2
         });
     }
 

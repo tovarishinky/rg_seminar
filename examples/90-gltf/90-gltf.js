@@ -66,6 +66,7 @@ class App extends Application {
         //console.log(this.collisionScene);
         this.pm = new ParticleMover(this.scene);
         this.pickupM = new PickupMover(this.scene);
+        this.svetlost=1.5;
 
     }
 
@@ -150,14 +151,16 @@ class App extends Application {
     }
 
     incrLight(dt) {
-        if (this.svetlost && this.light && this.svetlost < 10) {
-            this.svetlost += 1 * dt;
+        if (this.svetlost && this.svetlost < 10) {
+            this.svetlost += 4 * dt;
+            this.lights[0].ambientHand += 4 * dt;
         }
     }
 
     decrLight(dt) {
-        if (this.svetlost && this.light && this.svetlost > 0.001) {
-            this.svetlost -= 1 * dt;
+        if (this.svetlost && this.svetlost > 0.001) {
+            this.svetlost -= 4 * dt;
+            this.lights[0].ambientHand -= 4 * dt;
         }
     }
 
@@ -238,9 +241,14 @@ class App extends Application {
         let sprememba_svetlosti=0.5;
         //stalna svetlost
         let svetlost=1.5;
-        for (let i = 1; i < this.lights.length; i++) {
+
+
+        for (let i = 0; i < this.lights.length; i++) {
             if(this.lights[i].name=="LightBrazier"){
                 svetlost=10;
+            }
+            if(i==0&&this.svetlost!=undefined){
+                svetlost=this.svetlost;
             }
             this.lights[i].diffuse=svetlost+(Math.random()*sprememba_svetlosti-sprememba_svetlosti/2);
             this.lights[i].color=[flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];

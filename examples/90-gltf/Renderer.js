@@ -205,6 +205,7 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uAmbient, lights[0].ambient);
         gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
         gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
+        gl.uniform1f(program.uniforms.ambientHand, lights[0].ambientHand);
         const lightCords = vec3.create();
         for (let i = 0; i < lights.length; i++) {
             let color = vec3.clone(lights[i].color);
