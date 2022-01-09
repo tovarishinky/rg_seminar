@@ -298,10 +298,7 @@ export class Renderer {
         const glTexture = this.glObjects.get(texture.image);
         const glSampler = this.glObjects.get(texture.sampler);
 
-        const d = new Date();
-        let time = d.getTime();
-        let  timevec = vec2.create();
-        timevec=[(Math.random()*0.05)-0.025,Math.random()*0.5];
+        let timevec=texture.timeVec2;
         gl.uniform2fv(program.uniforms.rand,timevec);
         gl.uniform1f(program.uniforms.uIsParticle, texture.isParticle);
 

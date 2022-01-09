@@ -182,6 +182,7 @@ export class GLTFLoader {
         for (let i = 0; i < particleTextures.length; i++) {
             if(result.startsWith(particleTextures[i])) {
                 texture.isParticle=1.1;
+                texture.setTimeVec2();
             }
         }
         for (let i = 0; i < notReflectSelf.length; i++) {
