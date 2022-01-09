@@ -110,7 +110,7 @@ export class Physics {
             console.log("EXIT");
         }
         else if (b.name.startsWith("aabb_DeathFloor")) {
-            a.translation = vec3.clone(vec3.fromValues(0, 5, 0));
+            a.die();
         }
          else {
             if (isCollidingFeet) {

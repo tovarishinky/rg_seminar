@@ -5,7 +5,7 @@ export class Player extends Node {
     constructor(options = {}) {
         super(options);
 
-        this.dims = { width: 0.6, height: 1.8, length: 0.6 }; // set collision box for player
+        this.dims = { width: 0.6, height: 1.8, length: 0.8 }; // set collision box for player
         this.crouchHeight = 0.8;
         this.gravity = -5; // set gravity
         this.jumpHeight = 10; // set Jump    O:12
@@ -188,15 +188,22 @@ export class Player extends Node {
             vec3.mul(c.velocity, c.velocity, vec3.set(vec3.create(), c.maxSpeed / len, 1, c.maxSpeed / len));
         }
 
-        // smrt
-
-        if (this.translation[1] < -10) {
-            this.translation = vec3.fromValues(0, 5, 0);
-        }
 
         // update Rotation
         const degrees = this.rotationE.map(x => x * 180 / Math.PI);
         this.rotation = quat.fromEuler(quat.create(), ...degrees);
+
+        
+        // smrt
+
+        if (this.translation[1] < -10) {
+            this.die();
+        }
+    }
+
+    die() {
+        this.translation = vec3.fromValues(0, 5, 0);
+        this.velocity = [0,0,0];
     }
 
     enableCam() {
