@@ -263,8 +263,8 @@ export class Renderer {
             vec3.scale(color, color, 1.0 / 255.0);
             gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
         }
-        gl.uniform1f(program.uniforms.uDiffuse, 0.3);//osvetljenost kapljic
-        gl.uniform1f(program.uniforms.uSpecular, 1);//svetlost odboja na kapljici
+        gl.uniform1f(program.uniforms.uDiffuse, 0.2);//osvetljenost kapljic
+        gl.uniform1f(program.uniforms.uSpecular, 0.8);//svetlost odboja na kapljici
     }
 
     enableCulling(gl){
