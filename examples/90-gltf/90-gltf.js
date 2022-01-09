@@ -20,7 +20,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/map1_test/map1_test.gltf');
+        await this.loader.load('../../common/models/map2_test/map2_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
@@ -29,7 +29,7 @@ class App extends Application {
         this.player = new Player({"app": this});
         this.player.camera = new PerspectiveCamera({ node: this.player });
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(-3,10,-55);
+        this.player.translation = vec3.fromValues(5,2,-45); // -3,10,-55 end coords (lvl1)
 
         this.trapMover = new TrapMover(this.scene, this.collisionScene);
 

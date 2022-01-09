@@ -31,10 +31,10 @@ export class Physics {
 
     moveObjects(dt) {
         for (const o of this.mObjects) {
-            this.bm.MoveDoor(o.mesh, o.coll, dt, vec3.fromValues(0,1 * dt,0));
+            this.bm.MoveDoor(o.mesh, o.coll, dt, vec3.fromValues(0,1 * dt,0), 1);
         }
         for (const o of this.m2) {
-            //this.bm.Move(o.mesh, o.coll, dt, vec3.fromValues(0,1 * dt,0));
+            this.bm.MoveDoor(o.mesh, o.coll, dt, vec3.fromValues(0,-1 * dt,0), 2);
         }
     }
 
@@ -107,6 +107,15 @@ export class Physics {
                 if (!this.doorMoving) {
                     console.log('Pressed!');
                     this.pressButton();
+                    this.doorMoving = true;
+                }
+            }
+        }
+        else if (b.name.startsWith("aabb_DoorTrigger")) {
+            if (a.action) {
+                if (!this.doorMoving) {
+                    console.log('Pressed!');
+                    this.pressButton2();
                     this.doorMoving = true;
                 }
             }
@@ -188,6 +197,25 @@ export class Physics {
 
         if (mesh && coll) {
             this.mObjects.push({'mesh': mesh, 'coll': coll});
+        }
+
+    }
+    pressButton2() {
+        let mesh;
+        let coll;
+        this.renderScene.traverse(node => {
+            if (node.name.startsWith("HiddenDoor")) {
+                mesh = node;
+            }
+        });
+        this.scene.traverse(node => {
+            if (node.name.startsWith("aabb_HiddenDoor")) {
+                coll = node;
+            }
+        });
+
+        if (mesh && coll) {
+            this.m2.push({'mesh': mesh, 'coll': coll});
         }
 
     }
