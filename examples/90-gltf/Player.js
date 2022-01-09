@@ -40,13 +40,13 @@ export class Player extends Node {
         this.initHand();
         
 
-        setInterval(() => {
-            console.log(
-                'x: ', Math.round(this.translation[0]).toString(),
-                '\ny: ', Math.round(this.translation[1]).toString(),
-                '\nz: ', Math.round(this.translation[2]).toString(),
-                '\nspeed: ', this.velocity)
-        }, 500); // TODO remove - debug
+        // setInterval(() => {
+        //     console.log(
+        //         'x: ', Math.round(this.translation[0]).toString(),
+        //         '\ny: ', Math.round(this.translation[1]).toString(),
+        //         '\nz: ', Math.round(this.translation[2]).toString(),
+        //         '\nspeed: ', this.velocity)
+        // }, 500); // TODO remove - debug
 
     }
 
@@ -190,14 +190,13 @@ export class Player extends Node {
 
         // smrt
 
-        if (this.translation[1] < -30) {
+        if (this.translation[1] < -10) {
             this.translation = vec3.fromValues(0, 5, 0);
         }
 
         // update Rotation
         const degrees = this.rotationE.map(x => x * 180 / Math.PI);
         this.rotation = quat.fromEuler(quat.create(), ...degrees);
-        //console.log(this.rotation);
     }
 
     enableCam() {
@@ -246,8 +245,6 @@ export class Player extends Node {
             this.rotation,
             this.translation,
             this.scale);
-        // ROKA
-        
     }
 
     keydownHandler(e) {

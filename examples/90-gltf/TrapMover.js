@@ -135,9 +135,9 @@ export class TrapMover {
         this.b1End -= b1move;
 
         // R1
-        if (this.r1End > 2) {
+        if (this.r1End > 2.5) {
             this.r1F = false;
-        } else if (this.r1End < -2) { // end
+        } else if (this.r1End < -1) { // end
             this.r1F = true;
         }
         const r1move = (this.r1F) ? 0.5 *dt : -0.5 *dt; // 1.5
