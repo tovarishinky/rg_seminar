@@ -18,6 +18,10 @@ import { TrapMover } from './trapMover.js';
 class App extends Application {
 
     async start() {
+        // UI
+        this.initDoor();
+        this.coins = 0;
+
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/map1_test/map1_test.gltf');
@@ -65,6 +69,10 @@ class App extends Application {
     }
 
     async newLvl() {
+        // UI
+        this.initDoor();
+        this.coins = 0;
+
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/map2_test/map2_test.gltf');
@@ -104,6 +112,22 @@ class App extends Application {
         this.pm = new ParticleMover(this.scene);
         this.pickupM = new PickupMover(this.scene);
     }
+
+    
+    updateCoins() {
+        document.getElementById("coin").innerHTML = "COINS: " + this.coins;
+    }
+
+    initDoor() {
+        document.getElementById("door").innerHTML = "";
+    }
+
+    alertDoor() {
+        document.getElementById("door").innerHTML = "  You sense a door opening ...  ";
+        setTimeout(()=> { this.initDoor() }, 6000);
+    }
+
+
 
 
     updateCollisionParams() {

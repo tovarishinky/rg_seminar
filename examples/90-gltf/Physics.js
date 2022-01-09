@@ -105,7 +105,8 @@ export class Physics {
         else if (b.name.startsWith("aabb_ButtonTrigger")) {
             if (a.action) {
                 if (!this.doorMoving) {
-                    console.log('Pressed!');
+                    //console.log('Pressed!');
+                    this.app.alertDoor();
                     this.pressButton();
                     this.doorMoving = true;
                 }
@@ -114,7 +115,8 @@ export class Physics {
         else if (b.name.startsWith("aabb_DoorTrigger")) {
             if (a.action) {
                 if (!this.doorMoving) {
-                    console.log('Pressed!');
+                    //console.log('Pressed!');
+                    this.app.alertDoor();
                     this.pressButton2();
                     this.doorMoving = true;
                 }
@@ -172,8 +174,10 @@ export class Physics {
         const name1 = nod.name.replace("aabb_Coin", "");
         const fakeFloor = nod.name.replace("aabb_FakeFloor", "");
         this.renderScene.traverse(node => {
-            if (node.name.startsWith("Coin") && node.name.replace("Coin", "") == name1) {
+            if (node.name.startsWith("Coin") && node.name.replace("Coin", "") == name1 && node.mesh != null) {
                 node.mesh = null;
+                this.app.coins += 1;
+                this.app.updateCoins();
             }
             if (node.name.startsWith("FakeFloor") && node.name.replace("FakeFloor", "") == fakeFloor) {
                 node.mesh = null;
