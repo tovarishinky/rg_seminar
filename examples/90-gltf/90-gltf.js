@@ -22,6 +22,9 @@ class App extends Application {
         this.initDoor();
         this.coins = 0;
 
+        // luc
+        this.svetlost = 1.5;
+
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/map1_test/map1_test.gltf');
@@ -68,6 +71,7 @@ class App extends Application {
 
     async newLvl() {
         // UI
+        this.player.lvl1 = false;
         this.initDoor();
         this.coins = 0;
 
@@ -234,7 +238,7 @@ class App extends Application {
         let sprememba_svetlosti=0.5;
         //stalna svetlost
         let svetlost=1.5;
-        for (let i = 0; i < this.lights.length; i++) {
+        for (let i = 1; i < this.lights.length; i++) {
             if(this.lights[i].name=="LightBrazier"){
                 svetlost=10;
             }
@@ -242,6 +246,8 @@ class App extends Application {
             this.lights[i].color=[flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];
             svetlost=1.5;
         }
+        this.light.diffuse = this.svetlost+(Math.random()*sprememba_svetlosti-sprememba_svetlosti/2);
+        this.light.color = [flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];
         
     
         //zakasnitev
