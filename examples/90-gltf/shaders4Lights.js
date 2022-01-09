@@ -15,19 +15,22 @@ out vec3 vNormal;
 out vec2 vTexCoord;
 out mat4 modelMat;
 out vec2 vRand;
+out mat4 vViewMat;
 
 void main() {
 
-    vVertexPosition = (uModelMatrix*aPosition).xyz;
+    vVertexPosition =(uViewMatrix*uModelMatrix*aPosition).xyz;
 
     vNormal=aNormal;
     if(uUseFakeLights>0.5){
-        vNormal=(uModelMatrix*vec4(0,1.0,0,0)).xyz;
+        vNormal=(vec4(0,1.0,0,0)).xyz;
     }
     modelMat=uModelMatrix;
     vTexCoord = aTexCoord;
+    vViewMat = uViewMatrix;
     vRand = rand;
-    gl_Position = uProjection * uViewMatrix * aPosition;
+    mat4 mvpMatrix=uViewMatrix *uModelMatrix;
+    gl_Position = uProjection * mvpMatrix * aPosition;
 }
 `;
 
@@ -41,7 +44,7 @@ uniform mediump sampler2D uTexture;
 uniform float uAmbient;
 uniform float uDiffuse;
 uniform float uSpecular;
-uniform mat4 uligtMatrix;
+uniform mat4 uligtMatrix[4];
 
 
 uniform float uShininess;
@@ -56,6 +59,7 @@ in vec3 vNormal;
 in vec2 vTexCoord;
 in mat4 modelMat;
 in vec2 vRand;
+in mat4 vViewMat;
 
 out vec4 oColor;
 
@@ -63,11 +67,11 @@ out vec4 oColor;
 
 void main() {
     for (int i = 0; i < 4; i++) {
-        vec3 lightPosition = (vec4(uLightPosition[i], 1)).xyz;
+        vec3 lightPosition = (vViewMat*vec4(uLightPosition[i], 1)).xyz;
         float d = distance(vVertexPosition, lightPosition);
         float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
             
-        vec3 N = normalize((modelMat*vec4(vNormal, 0)).xyz);
+        vec3 N = normalize((vViewMat*modelMat*vec4(vNormal, 0)).xyz);
         vec3 L = normalize(lightPosition - vVertexPosition);
         vec3 E = normalize(-vVertexPosition);
         vec3 R = normalize(reflect(-L, N));

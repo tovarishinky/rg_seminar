@@ -164,8 +164,8 @@ export class GLTFLoader {
         }
 
         const texture = new Texture(options);
-        let transTextures = ["Flame","Vines"]
-        let normTextures = ["Flame","Vines"];
+        let transTextures = ["Flame",]
+        let normTextures = ["Flame"];
         let particleTextures = ["Flame"];
         let notReflectSelf=["LanternCenter","Flame"];
         let result = options.image.src.substring(46);

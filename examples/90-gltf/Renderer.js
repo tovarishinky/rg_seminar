@@ -206,21 +206,19 @@ export class Renderer {
         gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
         gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
         gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
-        for (let i = 0; i < lights.length; i++) {
-            gl.uniform3fv(program.uniforms['uLightPosition[' + i + ']'], lights[i].translation);
-        }
-
+        const lightCords = vec3.create();
         for (let i = 0; i < lights.length; i++) {
             let color = vec3.clone(lights[i].color);
             vec3.scale(color, color, 1.0 / 255.0);
             gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
+            gl.uniformMatrix4fv(program.uniforms['uligtMatrix[' + i + ']'], false, lights[i].getGlobalTransform());
+            mat4.getTranslation(lightCords, lights[i].getGlobalTransform());
+            gl.uniform3fv(program.uniforms['uLightPosition[' + i + ']'], lights[i].translation);
         }
-
         gl.uniform3fv(program.uniforms.uLightAttenuation, lights[0].attenuatuion);
-        gl.uniformMatrix4fv(program.uniforms.uligtMatrix, false, lights[0].getGlobalTransform());
     }
 
-    renderNode(node, mvpMatrix,lights,program) {
+    renderNode(node, mvpMatrix,lights,program,ModelMatrix) {
         const gl = this.gl;
         if(node.name=="Light1") {
             return;
@@ -228,18 +226,26 @@ export class Renderer {
         if(node.name.startsWith('Drop')){
             this.setWaterLightUniforms(lights, gl, program);
         }else{
+            gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
+            gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
             for (let i = 0; i < lights.length; i++) {
                 let color = vec3.clone(lights[i].color);
                 vec3.scale(color, color, 1.0 / 255.0);
                 gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
             }
+
         }
         mvpMatrix = mat4.clone(mvpMatrix);
-        mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
+        // mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
         if (node.mesh) {
             const program = this.programs.simple;
             gl.uniformMatrix4fv(program.uniforms.uViewMatrix, false, mvpMatrix);
-            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
+            if(ModelMatrix!=undefined) {
+                mat4.mul(ModelMatrix, ModelMatrix, node.getGlobalTransform());
+            }else{
+                ModelMatrix = node.getGlobalTransform();
+            }
+            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, ModelMatrix);
 
             for (const primitive of node.mesh.primitives) {
                 this.renderPrimitive(primitive,program);
@@ -247,7 +253,7 @@ export class Renderer {
         }
 
         for (const child of node.children) {
-            this.renderNode(child, mvpMatrix,program);
+            this.renderNode(child, mvpMatrix,lights,program);
         }
     }
 
@@ -257,8 +263,8 @@ export class Renderer {
             vec3.scale(color, color, 1.0 / 255.0);
             gl.uniform3fv(program.uniforms['uLightColor[' + i + ']'], color);
         }
-        gl.uniform1f(program.uniforms.uDiffuse, 0.3);//osvetljenost kapljic
-        gl.uniform1f(program.uniforms.uSpecular, 1);//svetlost odboja na kapljici
+        gl.uniform1f(program.uniforms.uDiffuse, 0.2);//osvetljenost kapljic
+        gl.uniform1f(program.uniforms.uSpecular, 0.8);//svetlost odboja na kapljici
     }
 
     enableCulling(gl){
@@ -269,15 +275,22 @@ export class Renderer {
         gl.disable(gl.CULL_FACE);
     }
 
-    renderHand(node, mvpMatrix,program) {
+    renderHand(node, mvpMatrix,program,ModelMatrix) {
         const gl = this.gl;
-        gl.clear(gl.DEPTH_BUFFER_BIT);
+        // gl.clear(gl.DEPTH_BUFFER_BIT);
         mvpMatrix = mat4.clone(mvpMatrix);
-        mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
+        mvpMatrix = mat4.clone(mvpMatrix);
+        // mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
         if (node.mesh) {
             const program = this.programs.simple;
             gl.uniformMatrix4fv(program.uniforms.uViewMatrix, false, mvpMatrix);
-            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, node.getGlobalTransform());
+            if(ModelMatrix!=undefined) {
+                mat4.mul(ModelMatrix, ModelMatrix, node.getGlobalTransform());
+                console.log("tuki");
+            }else{
+                ModelMatrix = node.getGlobalTransform();
+            }
+            gl.uniformMatrix4fv(program.uniforms.uModelMatrix, false, ModelMatrix);
 
             for (const primitive of node.mesh.primitives) {
                 this.renderPrimitive(primitive,program);
@@ -285,7 +298,7 @@ export class Renderer {
         }
 
         for (const child of node.children) {
-            this.renderHand(child, mvpMatrix,program);
+            this.renderNode(child, mvpMatrix,program,ModelMatrix);
         }
     }
 
