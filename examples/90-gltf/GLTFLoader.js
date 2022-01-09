@@ -156,7 +156,6 @@ export class GLTFLoader {
         let options = {};
         if (gltfSpec.source !== undefined) {
             options.image = await this.loadImage(gltfSpec.source);
-            console.log(options.image.src);
         }
 
         if (gltfSpec.sampler !== undefined) {

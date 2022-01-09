@@ -42,7 +42,7 @@ precision mediump float;
 uniform mediump sampler2D uTexture;
 
 uniform float uAmbient;
-uniform float uDiffuse;
+uniform float uDiffuse[4];
 uniform float uSpecular;
 uniform mat4 uligtMatrix[4];
 
@@ -80,11 +80,11 @@ void main() {
         float phong = pow(max(0.0, dot(E, R)), uShininess);
         
         float ambient = uAmbient;
-        float diffuse = uDiffuse * lambert;
+        float diffuse = uDiffuse[i] * lambert;
         float specular = uSpecular * phong;
-        if(lampa>0.5&&i==0){
+        if(lampa>0.5){
             specular=0.0;
-            ambient=3.0;
+            ambient=2.0;
         }
         
         vec3 diffuseLight = vec3(245,150,49)*specular; //specular color
