@@ -69,6 +69,7 @@ class App extends Application {
 
     async newLvl() {
         // UI
+        this.player.lvl1 = false;
         this.initDoor();
         this.coins = 0;
 
