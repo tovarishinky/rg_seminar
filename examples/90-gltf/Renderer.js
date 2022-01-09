@@ -277,7 +277,7 @@ export class Renderer {
 
     renderHand(node, mvpMatrix,program,ModelMatrix) {
         const gl = this.gl;
-        // gl.clear(gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.DEPTH_BUFFER_BIT);
         mvpMatrix = mat4.clone(mvpMatrix);
         mvpMatrix = mat4.clone(mvpMatrix);
         // mat4.mul(mvpMatrix, mvpMatrix, node.getGlobalTransform());
