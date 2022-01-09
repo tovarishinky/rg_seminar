@@ -26,7 +26,7 @@ class App extends Application {
         this.scene = await scenes[0];
         this.collisionScene = await scenes[1];
 
-        this.player = new Player();
+        this.player = new Player({"app": this});
         this.player.camera = new PerspectiveCamera({ node: this.player });
         this.player.updateMatrix();
         this.player.translation = vec3.fromValues(-3,10,-55);
@@ -60,6 +60,8 @@ class App extends Application {
         //console.log(this.collisionScene);
         this.pm = new ParticleMover(this.scene);
         this.pickupM = new PickupMover(this.scene);
+
+        this.svetlost = 1.5;
     }
 
     async newLvl() {
@@ -71,7 +73,6 @@ class App extends Application {
         this.scene = await scenes[0];
         this.collisionScene = await scenes[1];
 
-        this.player = new Player();
         this.player.camera = new PerspectiveCamera({ node: this.player });
         this.player.updateMatrix();
         this.player.translation = vec3.fromValues(0,5,0);
@@ -115,6 +116,18 @@ class App extends Application {
             vec3.mul(mb, mb, node.scale);
             vec3.mul(mbb, mbb, node.scale);
         });
+    }
+
+    incrLight(dt) {
+        if (this.svetlost && this.light && this.svetlost < 10) {
+            this.svetlost += 1 * dt;
+        }
+    }
+
+    decrLight(dt) {
+        if (this.svetlost && this.light && this.svetlost > 0.001) {
+            this.svetlost -= 1 * dt;
+        }
     }
 
     render() {
@@ -191,13 +204,19 @@ class App extends Application {
         let g=10;
         let b=10;
         //za koliko se spreminja svetlost
-        let sprememba_svetlosti=0.2;
+        let sprememba_svetlosti=0.5;
         //stalna svetlost
         let svetlost=1.5;
-        for (let i = 0; i < this.lights.length; i++) {
+        for (let i = 1; i < this.lights.length; i++) {
             this.lights[i].diffuse=svetlost+(Math.random()*sprememba_svetlosti-sprememba_svetlosti/2);
             this.lights[i].color=[flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];
         }
+        if (this.svetlost) {
+            this.light.diffuse=this.svetlost+(Math.random()*sprememba_svetlosti-sprememba_svetlosti/2);
+            this.light.color=[flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];
+        }
+        
+    
         //zakasnitev
         let time=30
         //za koliko lahko čas naraste
@@ -217,14 +236,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new App(canvas);
     const gui = new GUI();
     gui.add(app, 'enableCamera');
-    setTimeout(() => {
-        gui.add(app.light, 'ambient', 0.0, 1.0);
-        gui.add(app.light, 'diffuse', 0.0, 10.0);
-        gui.add(app.light, 'specular', 0.0, 1.0);
-        gui.add(app.light, 'shininess', 0.0, 1000.0);
-        gui.addColor(app.light, 'color');
-        gui.add(app.light.translation, 0, -5, 5.0);
-        gui.add(app.light.translation, 1, 0, 10.0);
-        gui.add(app.light.translation, 2, -5, 5);
-    }, 5000);
+    // setTimeout(() => {
+    //     gui.add(app.light, 'ambient', 0.0, 1.0);
+    //     gui.add(app.light, 'diffuse', 0.0, 10.0);
+    //     gui.add(app.light, 'specular', 0.0, 1.0);
+    //     gui.add(app.light, 'shininess', 0.0, 1000.0);
+    //     gui.addColor(app.light, 'color');
+    //     gui.add(app.light.translation, 0, -5, 5.0);
+    //     gui.add(app.light.translation, 1, 0, 10.0);
+    //     gui.add(app.light.translation, 2, -5, 5);
+    // }, 5000);
 });

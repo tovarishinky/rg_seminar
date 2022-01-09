@@ -4,7 +4,7 @@ import { Node } from "./Node.js";
 export class Player extends Node {
     constructor(options = {}) {
         super(options);
-
+        this.app = options.app;
         this.dims = { width: 0.6, height: 1.8, length: 0.8 }; // set collision box for player
         this.crouchHeight = 0.8;
         this.gravity = -5; // set gravity
@@ -114,6 +114,13 @@ export class Player extends Node {
             this.action = true;
         } else {
             this.action = false;
+        }
+
+        if (this.keys['KeyF']) {
+            this.app.incrLight(dt);
+        }
+        if (this.keys['KeyG']) {
+            this.app.decrLight(dt);
         }
 
         /* Crouching 
