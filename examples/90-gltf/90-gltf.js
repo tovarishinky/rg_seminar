@@ -20,7 +20,7 @@ class App extends Application {
     async start() {
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
-        await this.loader.load('../../common/models/map2_test/map2_test.gltf');
+        await this.loader.load('../../common/models/map1_test/map1_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];

@@ -7,7 +7,7 @@ export class Texture {
         this.sampler = options.sampler || new Sampler();
         this.hasMipmaps = false;
         this.hasTransparency = false;
-        this.useFakeLights=0;
+        this.useFakeLights=0.1;
     }
 
 }
