@@ -203,7 +203,6 @@ export class Renderer {
 
     setLightsUniforms(gl, program, lights, player) {
         gl.uniform1f(program.uniforms.uAmbient, lights[0].ambient);
-        gl.uniform1f(program.uniforms.uDiffuse, lights[0].diffuse);
         gl.uniform1f(program.uniforms.uSpecular, lights[0].specular);
         gl.uniform1f(program.uniforms.uShininess, lights[0].shininess);
         const lightCords = vec3.create();
@@ -214,6 +213,7 @@ export class Renderer {
             gl.uniformMatrix4fv(program.uniforms['uligtMatrix[' + i + ']'], false, lights[i].getGlobalTransform());
             mat4.getTranslation(lightCords, lights[i].getGlobalTransform());
             gl.uniform3fv(program.uniforms['uLightPosition[' + i + ']'], lights[i].translation);
+            gl.uniform1f(program.uniforms['uDiffuse[' + i + ']'], lights[i].diffuse);
         }
         gl.uniform3fv(program.uniforms.uLightAttenuation, lights[0].attenuatuion);
     }
