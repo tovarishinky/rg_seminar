@@ -15,6 +15,7 @@ export class Player extends Node {
         this.acceleration = 5; // set acceleration
         this.maxSpeed = this.walkSpeed;
         this.rotationE = [0, 0, 0];
+        this.lvl1 = true;
 
         this.mousemoveHandler = this.mousemoveHandler.bind(this);
         this.keydownHandler = this.keydownHandler.bind(this);
@@ -202,10 +203,16 @@ export class Player extends Node {
 
         
         // smrt
-
-        if (this.translation[1] < -30) {
-            this.die();
+        if (this.lvl1) {
+            if (this.translation[1] < -10) {
+                this.die();
+            }
+        } else {
+            if (this.translation[1] < -30) {
+                this.die();
+            }
         }
+        
     }
 
     die() {
