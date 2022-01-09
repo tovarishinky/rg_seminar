@@ -17,9 +17,10 @@ out mat4 modelMat;
 void main() {
 
     vVertexPosition = (uModelMatrix*aPosition).xyz;
-    vNormal = aNormal;
+
+    vNormal=aNormal;
     if(uUseFakeLights>0.5){
-        vNormal=vec3(0.0,1.0,0.0);
+        vNormal=(vec4(0,-1.0,0,0)).xyz;
     }
     modelMat=uModelMatrix;
     vTexCoord = aTexCoord;
@@ -58,7 +59,7 @@ void main() {
         float d = distance(vVertexPosition, lightPosition);
         float attenuation = 1.0 / dot(uLightAttenuation, vec3(1, d, d * d));
             
-        vec3 N = (vec4(vNormal, 0)).xyz;
+        vec3 N = normalize(vec4(vNormal, 0).xyz);
         vec3 L = normalize(lightPosition - vVertexPosition);
         vec3 E = normalize(-vVertexPosition);
         vec3 R = normalize(reflect(-L, N));

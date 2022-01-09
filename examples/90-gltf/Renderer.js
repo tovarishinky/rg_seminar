@@ -299,9 +299,9 @@ export class Renderer {
         const glSampler = this.glObjects.get(texture.sampler);
 
 
+        gl.uniform1f(program.uniforms.uUseFakeLights, texture.useFakeLights);
         if(texture.hasTransparency){
             this.disableCulling(gl);
-            gl.uniform1f(program.uniforms.uUseFakeLights, false, texture.useFakeLights);
         }else{
             this.enableCulling(gl);
         }

@@ -175,7 +175,7 @@ export class GLTFLoader {
         for (let i = 0; i < normTextures.length; i++) {
             let result = options.image.src.substring(46);
             if(result.startsWith(normTextures[i])) {
-                texture.useFakeLights=1;
+                texture.useFakeLights=1.1;
             }
         }
 
