@@ -122,6 +122,9 @@ export class Physics {
                 }
             }
         }
+        else if (b.name.startsWith("aabb_EndTrigger")) {
+            this.app.gameComplete();
+        }
         else if (b.name.startsWith("aabb_ExitTrigger") && !this.loadingNewLevel) {
             console.log("EXIT");
             this.loadingNewLevel = true;

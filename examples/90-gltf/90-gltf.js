@@ -33,7 +33,7 @@ class App extends Application {
         this.player = new Player({"app": this});
         this.player.camera = new PerspectiveCamera({ node: this.player });
         this.player.updateMatrix();
-        this.player.translation = vec3.fromValues(5,2,-45); // -3,10,-55 end coords (lvl1)
+        this.player.translation = vec3.fromValues(5,2,-45); // -3,10,-55 end coords (lvl1) // 5,2,-45 lvl2
 
         this.trapMover = new TrapMover(this.scene, this.collisionScene);
 
@@ -74,6 +74,52 @@ class App extends Application {
         this.gameSpeed = 1 * 0.001; // set gamespeed with first number
         this.loader = new GLTFLoader();
         await this.loader.load('../../common/models/map2_test/map2_test.gltf');
+
+        const scenes = await this.loader.loadScene(this.loader.defaultScene);
+        this.scene = await scenes[0];
+        this.collisionScene = await scenes[1];
+
+        this.player.camera = new PerspectiveCamera({ node: this.player });
+        
+        this.player.translation = vec3.fromValues(0,5,0);
+        this.player.updateMatrix();
+
+        this.trapMover = new TrapMover(this.scene, this.collisionScene);
+
+        this.lights = this.scene.getLights();
+        this.light = this.lights[0];
+        this.lights[0].color = [248, 141, 51];
+        this.lights[1].color = [248, 141, 51];
+        this.lights[2].color = [248, 141, 51];
+        this.lights[3].color = [248, 141, 51];
+        this.flame();
+
+        this.physics = new Physics(this.collisionScene, this.scene, this);
+
+        this.renderer = new Renderer(this.gl);
+        this.renderer.prepareScene(this.scene);
+        this.resize();
+
+        this.updateCollisionParams();
+        console.log(this.scene);
+        console.log(this.collisionScene);
+
+        // block Mover
+
+        //console.log(this.scene);
+        //console.log(this.collisionScene);
+        this.pm = new ParticleMover(this.scene);
+        this.pickupM = new PickupMover(this.scene);
+    }
+
+    gameComplete() {
+        // UI
+        this.initDoor();
+        this.coins = 0;
+
+        this.gameSpeed = 1 * 0.001; // set gamespeed with first number
+        this.loader = new GLTFLoader();
+        await this.loader.load('../../common/models/map1_test/map1_test.gltf');
 
         const scenes = await this.loader.loadScene(this.loader.defaultScene);
         this.scene = await scenes[0];
