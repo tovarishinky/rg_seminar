@@ -1,4 +1,4 @@
-import {mat4, vec3} from '../../lib/gl-matrix-module.js';
+import {mat4, vec3,vec2} from '../../lib/gl-matrix-module.js';
 
 import { WebGL } from '../../common/engine/WebGL.js';
 
@@ -298,7 +298,14 @@ export class Renderer {
         const glTexture = this.glObjects.get(texture.image);
         const glSampler = this.glObjects.get(texture.sampler);
 
+        const d = new Date();
+        let time = d.getTime();
+        let  timevec = vec2.create();
+        timevec=[(Math.random()*0.05)-0.025,Math.random()*0.5];
+        gl.uniform2fv(program.uniforms.rand,timevec);
+        gl.uniform1f(program.uniforms.uIsParticle, texture.isParticle);
 
+        gl.uniform1f(program.uniforms.lampa, texture.lampa);
         gl.uniform1f(program.uniforms.uUseFakeLights, texture.useFakeLights);
         if(texture.hasTransparency){
             this.disableCulling(gl);

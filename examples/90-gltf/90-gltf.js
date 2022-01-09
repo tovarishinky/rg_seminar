@@ -142,12 +142,25 @@ class App extends Application {
     }
 
     async flame(){
+        //barva plamena
         let flameColor=[245,154,80];
+        // r,g,b so za koliko se random spreminjajo barve rgb
+        let r=40;
+        let g=20;
+        let b=20;
+        //za koliko se spreminja svetlost
+        let sprememba_svetlosti=0.2;
+        //stalna svetlost
+        let svetlost=1.5;
         for (let i = 0; i < this.lights.length; i++) {
-            this.lights[i].diffuse=1.5+Math.random()*0.1;
-            this.lights[i].color=[flameColor[0]+Math.random()*20,flameColor[1]+Math.random()*10,flameColor[2]+Math.random()*10];
+            this.lights[i].diffuse=svetlost+(Math.random()*sprememba_svetlosti-sprememba_svetlosti/2);
+            this.lights[i].color=[flameColor[0]+(Math.random()*r-r/2),flameColor[1]+(Math.random()*g-g/2),flameColor[2]+(Math.random()*b-b/2)];
         }
-        setTimeout(() => {this.flame();},20+Math.random()*120);
+        //zakasnitev
+        let time=20
+        //za koliko lahko čas naraste
+        let time_change=120
+        setTimeout(() => {this.flame();},time+Math.random()*time_change);
 
     }
 
