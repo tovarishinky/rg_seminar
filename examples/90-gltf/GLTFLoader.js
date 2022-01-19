@@ -167,7 +167,7 @@ export class GLTFLoader {
         let normTextures = ["Flame"];
         let particleTextures = ["Flame"];
         let notReflectSelf=["LanternCenter","Flame"];
-        let result = options.image.src.substring(46);
+        let result = options.image.src.substring(options.image.src.lastIndexOf('/')+1);
         for (let i = 0; i < transTextures.length; i++) {
             if(result.startsWith(transTextures[i])) {
                 texture.hasTransparency = true;
